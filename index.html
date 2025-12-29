@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LASER MAZE</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="header">
+        <div class="header-left">
+            <div class="level-text">LEVEL - <span id="level-indicator">01</span></div>
+            <button class="btn-red" id="btn-select-level">SELECT LEVEL</button>
+        </div>
+
+        <div class="header-center">
+            <h1 class="title">LASER MAZE</h1>
+            <div class="subtitle">Reflect - split - connect</div>
+        </div>
+        <div class="header-right">
+            <button class="btn-red" id="btn-how-to">HOW TO PLAY</button>
+        </div>
+    </div>
+    <div class="game-container">
+        <canvas id="gameCanvas"></canvas>
+        <div id="game-message" class="hidden">LEVEL COMPLETE!</div>
+    </div>
+    <div class="footer">
+        <div class="footer-left">
+            <div class="rotate-pill">ROTATE (USE &rarr; &larr; Keys)</div>
+        </div>
+        <div class="footer-right">
+            <button class="btn-red" onclick="window.open('https://github.com',_'blank')">GITHUB</button>
+            <button class="btn-red">FEATURES</button>
+        </div>
+    </div>
+
+    <!--js fetch-->
+    <script src="game.js"></script>
+</body>
+</html>
