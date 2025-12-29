@@ -1,0 +1,7 @@
+/*using GAGALIN font all over website*/
+@font-face{
+    font-family: 'Gagalin';
+    src: url('Gagalin-Regular.otf') format('opentype'), url('https://raw.githubusercontent.com/nemobgs/mrBurger/master/fonts/wpid-gagalin/Gagalin-Regular.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
