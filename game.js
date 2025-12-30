@@ -9,7 +9,7 @@ const btnClose = document.getElementById('btn-close-modal');
 
 const BASE_TILE_SIZE = 70;
 let TILE_SIZE = 70;
-let maxUnlockedLevel = 1;
+let maxUnlockedLevel = parseInt(localStorage.getItem('laserMaze_unlockedLevel')) || 1;
 const BLOCK_HEIGHT = 12;
 let gridOffsetX = 0;
 let gridOffsetY = 0;
@@ -20,10 +20,12 @@ const COLORS = {
     gridBorder: '#000000',
     gridFill: '#134B5F',
     gridHighlight: 'rgba(255,255,255,0.2)',
+    blockTop: 'ecf0f1',
+    blockSide: '#bdc3c7',
     blockTop: '#ecf0f1',
     blockSide: '#bdc3c7',
-    wallTop: '#34495e',
-    wallSide: '#2c3e50',
+    wallTop: '#95a5a6',
+    wallSide: '#7f8c8d',
     mirrorFace: '#3498db',
     splitterFace: '#9b59b6',
     laserCore: '#ffffff',
@@ -311,6 +313,7 @@ function checkWin(){
 
             if(currentLevelIdx + 1 >= maxUnlockedLevel){
                 maxUnlockedLevel = currentLevelIdx + 2;
+                localStorage.setItem('laserMaze_unlockedLevel', maxUnlockedLevel);
             }
             setTimeout(() => {
                 messageBox.classList.remove('hidden');
