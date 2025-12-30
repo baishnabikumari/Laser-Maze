@@ -222,3 +222,82 @@ canvas {
         width: 95%;
     }
 }
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 200;
+    backdrop-filter: blur(5px);
+}
+
+.modal-content {
+    background-color: #5c2a2a; /*dark red brown using that #f23549*/
+    padding: 30px;
+    border-radius: 25px;
+    width: 90%;
+    max-width: 600px;
+    text-align: center;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    border: 4px solid #3d1e1e;
+}
+
+.modal-title{
+    font-family: 'Gagalin', sans-serif;
+    color: white;
+    font-size: 3rem;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+}
+
+.level-grid{
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.level-btn{
+    background-color: var(--primary-red);
+    color: white;
+    font-family: 'Gagalin', sans-serif;
+    font-size: 2rem;
+    border: none;
+    border-radius: 15px;
+    aspect-ratio: 1 / 1;
+    cursor: pointer;
+    box-shadow: 0 6px 0 #c0392b;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.level-btn:active{
+    transform: translateY(4px);
+    box-shadow: 0 2px 0 #c0392b;
+}
+.level-btn.locked{
+    background-color: #e58e26;
+    box-shadow: 0 6px 0 #b36f1e;
+    cursor: not-allowed;
+}
+.level-btn.locked:active{
+    transform: none;
+    box-shadow: 0 6px 0 #b36f1e;
+}
+.lock-icon{
+    width: 24px;
+    height: 30px;
+    fill: #3d1e1e;
+}
+.btn-close{
+    width: auto;
+    padding: 10px 40px;
+    margin-top: 10px;
+}

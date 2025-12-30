@@ -3,9 +3,13 @@ const ctx = canvas.getContext('2d');
 const container = document.querySelector('.game-container');
 const levelIndicator = document.getElementById('level-indicator');
 const messageBox = document.getElementById('game-message');
+const modal = document.getElementById('level-modal');
+const levelGrid = document.getElementById('level-grid');
+const btnClose = document.getElementById('btn-close-modal');
 
 const BASE_TILE_SIZE = 70;
 let TILE_SIZE = 70;
+let maxUnlockedLevel = 1;
 const BLOCK_HEIGHT = 12;
 let gridOffsetX = 0;
 let gridOffsetY = 0;
@@ -69,6 +73,41 @@ const asciiLevels = [
         "....^....",
         " % / \\  "
     ],
+    [
+        "....T....",
+        "..T.....T",
+        ".........",
+        ".........",
+        ".^...^...",
+        "  /  \\  "
+    ],
+    [
+        ".T.....T.",
+        ".........",
+        ".........",
+        ".>.....>.",
+        ".........",
+        "   /  \\ "
+    ],
+    [
+        "WWWWWWWWW",
+        "W.T...T.W",
+        "W.......W",
+        "W...>...W",
+        "W.......W",
+        "WWWWWWWWW",
+        " / \\ / \\"
+    ],
+    [
+        "T.......T",
+        ".........",
+        "T.......T",
+        ".........",
+        "",
+        "",
+        "",
+        ""
+    ]
 ];
 
 function parseLevel(asciiGrid) {
@@ -230,6 +269,10 @@ function checkWin(){
     if(target.length > 0 && target.every(t => t.active)) {
         if(!isLevelComplete){
             isLevelComplete = true;
+
+            if(currentLevelIdx + 1 >= maxUnlockedLevel){
+                maxUnlockedLevel = currentLevelIdx + 2;
+            }
             setTimeout(() => {
                 messageBox.classList.remove('hidden');
                 setTimeout(() => {
@@ -503,9 +546,33 @@ document.addEventListener('keydown', (e) => {
     else if((e.key === 'ArrowLeft' || e.key === 'a') && !selectedObj.locked) { selectedObj.rot = selectedObj.rot === 0 ? 1 : 0; changed = true}
     if(changed) calculateLaser();
 });
-document.getElementById('btn-select-level').addEventListener('click', () => {
-    let lvl = prompt("Enter level (1-10):");
-    if(lvl && !isNaN(lvl)) initLevel(parseInt(lvl) - 1);
-});
+
+function openLevelMenu(){
+    levelGrid.innerHTML = '';
+    asciiLevels.forEach((_, index) => {
+        const btn = document.createElement('button');
+        const levelNum = index + 1;
+        btn.className = 'level-btn';
+
+        if(levelNum <= maxUnlockedLevel){
+            btn.innerText = levelNum;
+            btn.onclick = () => {
+                initLevel(index);
+                modal.classList.add('hidden');
+            };
+        } else {
+            btn.classList.add('locked');
+            btn.innerHTML = `<svg class="lock-icon" viewBox="0 0 24 24"><path d="M12 2C9.243 2 7 4.234 7 7v3H6c-1.103 0-2 .897-2 2v8c0 1.103.897 2 2 2h12c1.103 0 2-.897 2-2v-8c0-1.103-.897-2-2-2h-1V7c0-2.757-2.243-5-5-5zm6 10v8H6v-8h12zm-9-3v-2c0-1.654 1.346-3 3-3s3 1.346 3 3v2H9z"></path></svg>`;
+        }
+        levelGrid.appendChild(btn);
+    });
+    modal.classList.remove('hidden');
+}
+btnClose.onclick = () => modal.classList.add('hidden');
+document.getElementById('btn-select-level').addEventListener('click', openLevelMenu);
+// document.getElementById('btn-select-level').addEventListener('click', () => {
+//     let lvl = prompt("Enter level (1-10):");
+//     if(lvl && !isNaN(lvl)) initLevel(parseInt(lvl) - 1);
+// });
 document.getElementById('btn-how-to').addEventListener('click', () => alert("Controls:\n1. DRAG mirror to grid.\n2. CLICK to select.\n3. ARROW KEYS to rotate."));
 initLevel(0);
