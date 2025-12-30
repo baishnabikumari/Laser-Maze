@@ -301,3 +301,6 @@ canvas {
     padding: 10px 40px;
     margin-top: 10px;
 }
+.hidden{
+    display: none !important;
+}
