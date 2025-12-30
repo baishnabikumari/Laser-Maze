@@ -1,5 +1,3 @@
-const { isValidElement } = require("react");
-
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 const container = document.querySelector('.game-container');
@@ -374,3 +372,136 @@ function drawAnimatedLasers(){
         ctx.globalCompositeOperation = 'source-over'; ctx.shadowBlur = 0;
     }
 }
+
+function drawGridTile(x, y){
+    const px = gridOffsetX + x * TILE_SIZE;
+    const py = gridOffsetY + x * TILE_SIZE;
+    ctx.fillStyle = COLORS.gridFill;
+    ctx.strokeStyle = COLORS.gridBorder;
+    ctx.lineWidth = 3;
+    ctx.beginPath(); ctx.rect(px, py, TILE_SIZE, TILE_SIZE); ctx.fill(); ctx.stroke();
+    ctx.strokeStyle = 'rgba(255,255,255,0.05)'; ctx.lineWidth = 1; ctx.strokeRect(px+5, py+5, TILE_SIZE-10, TILE_SIZE-10);
+}
+
+function drawObject3D(obj, cx, cy, lifted = false){
+    const size = TILE_SIZE * 0.7;
+    const half = size / 2;
+    const baseY = lifted ? cy : cy + 5;
+    const baseX = cx;
+
+    if(!lifted){
+        ctx.fillStyle = 'rgba(0,0,0,0.3)';
+        ctx.beginPath(); ctx.ellipse(baseX, baseY + half, half, half*0.4, 0, 0, Math.PI*2); ctx.fill();
+    }
+    if(obj.type === TYPE.TARGET){
+        ctx.beginPath(); ctx.arc(cx, cy, size/3, 0, Math.PI*2);
+        ctx.fillStyle = obj.active ? COLORS.targetActive : COLORS.target; ctx.fill();
+        ctx.strokeStyle = '#fff'; ctx.lineWidth = 3; ctx.stroke();
+        if(obj.active) { ctx.shadowColor = COLORS.target; ctx.shadowBlur = 20; ctx.fillStyle = '#fff'; ctx.fill(); ctx.shadowBlur = 0; }
+        return;
+    }
+    const topY = baseY - BLOCK_HEIGHT;
+    if(obj.type === TYPE.WALL){
+        ctx.fillStyle = COLORS.wallSide; roundRect(ctx, baseX - half, baseY - half, size, size, 8, true);
+        ctx.fillStyle = COLORS.wallTop; roundRect(ctx, baseX - half, topY - half, size, size, 8, true);
+        ctx.strokeStyle = 'rgba(0,0,0,0.3)'; ctx.lineWidth = 3;
+        ctx.beginPath(); ctx.moveTo(baseX - half + 10, topY - half + 10); ctx.lineTo(baseX + half - 10, topY + half - 10);
+        ctx.moveTo(baseX + half - 10, topY - half + 10); ctx.lineTo(baseX - half + 10); ctx.stroke();
+        return;
+    }
+    ctx.fillStyle = COLORS.blockSide; roundRect(ctx, baseX - half, baseY - half, size, size, 8, true);
+    ctx.fillStyle = COLORS.blockTop;
+    if(selectedObj === obj && !isDragging) ctx.fillStyle = '#d1f2eb';
+    if(isDragging && dragObj === obj) ctx.fillStyle = '#abebc6';
+    roundRect(ctx, baseX - half, topY - half, size, size, 8, true);
+
+    if(obj.type === TYPE.SOURCE){
+        ctx.fillStyle = COLORS.source; ctx.beginPath(); ctx.arc(baseX, topY, size/5, 0, Math.PI*2); ctx.fill();
+        ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(baseX, topY, size/12, 0, Math.PI*2); ctx.fill();
+    }
+    else if(obj.type === TYPE.MIRROR) drawMirrorFace(baseX, topY, size, obj.rot);
+    else if(obj.type === TYPE.SPLITTER) drawSplitterFace(baseX, topY, size, obj.rot);
+}
+function drawMirrorFace(x, y, size, rot){
+    ctx.strokeStyle = COLORS.mirrorFace; ctx.lineWidth = size/10; ctx.lineCap = 'round';
+    ctx.beginPath(); const offset = size * 0.3;
+    if(rot === 0){ ctx.moveTo(x-offset, y + offset); ctx.lineTo(x + offset, y - offset); }
+    else { ctx.moveTo(x - offset, y - offset); ctx.lineTo(x + offset, y + offset); }
+    ctx.stroke();
+    ctx.fillStyle = '#3498db'; ctx.beginPath(); ctx.arc(x, y, size/15, 0, Math.PI*2); ctx.fill();
+}
+
+function drawSplitterFace(x, y, size, rot){
+    ctx.fillStyle = COLORS.splitterFace;
+    ctx.beginPath(); const s = size/4;
+    ctx.moveTo(x, y - s); ctx.lineTo(x + s, y); ctx.lineTo(x, y + s); ctx.lineTo(x - s, y); ctx.fill();
+    ctx.strokeStyle = '#fff'; ctx.lineWidth = 3; ctx.beginPath(); const offset = s;
+    if(rot === 0) { ctx.moveTo(x - offset, y + offset); ctx.lineTo(x + offset, y - offset); }
+    else { ctx.moveTo(x - offset, y - offset); ctx.lineTo(x + offset, y + offset); }
+    ctx.stroke();
+}
+
+function roundRect(ctx, x, y, width, height, radius, fill) {
+    ctx.beginPath();
+    ctx.moveTo(x + radius, y); ctx.lineTo(x + width - radius, y);
+    ctx.quadraticCurveTo(x + width, y, x + width, y + radius); ctx.lineTo(x + width, y + height - radius);
+    ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height); ctx.lineTo(x + radius, y + height);
+    ctx.quadraticCurveTo(x, y + height, x, y + height - radius); ctx.lineTo(x, y + radius);
+    ctx.quadraticCurveTo(x, y, x + radius, y); ctx.closePath();
+    if(fill) ctx.fill();
+}
+
+//Input
+function getGridPos(e){
+    const rect = canvas.getBoundingClientRect();
+    const mx = e.clientX - rect.left - gridOffsetX;
+    const my = e.clientY - rect.top - gridOffsetY;
+    return { x: Math.floor(mx / TILE_SIZE), y: Math.floor(my / TILE_SIZE), mx: e.clientX - rect.left, my: e.clientY - rect.top };
+}
+canvas.addEventListener('mousedown', (e) => {
+    if(isLevelComplete) return;
+    const pos = getGridPos(e);
+    const obj = objects.find(o => o.x === pos.x && o.y === pos.y);
+    if(obj && !obj.locked){
+        isDragging = true; dragObj = obj; selectedObj = obj;
+        const objScreenX = gridOffsetX + obj.x * TILE_SIZE + TILE_SIZE/2;
+        const objScreenY = gridOffsetY + obj.y * TILE_SIZE + TILE_SIZE/2;
+        dragOffset.x = objScreenX - pos.mx; dragOffset.y = objScreenY - pos.my;
+        dragPos.x = pos.mx + dragOffset.x; dragPos.y = pos.my + dragOffset.y;
+        calculateLaser();
+    } else if (obj) selectedObj = null;
+});
+canvas.addEventListener('mousemove', (e) => {
+    if(isDragging && dragObj){
+        const rect = canvas.getBoundingClientRect();
+        dragPos.x = (e.clientX - rect.left) + dragOffset.x;
+        dragPos.y = (e.clientY - rect.top) + dragOffset.y;
+    }
+});
+canvas.addEventListener('mouseup', (e) => {
+    if(isDragging && dragObj){
+        const dropX = Math.round((dragPos.x - gridOffsetX - TILE_SIZE/2) / TILE_SIZE);
+        const dropY = Math.round((dragPos.y - gridOffsetY - TILE_SIZE/2) / TILE_SIZE);
+        if(isValidMove(dropX, dropY)){ dragObj.x = dropX; dragObj.y = dropY; }
+        isDragging = false; dragObj = null; calculateLaser();
+    }
+});
+function isValidMove(x, y){
+    if(y < 0 || y >= levelMap.length || x < 0 || x >= levelMap[0].length) return false;
+    if(levelMap[y][x] !== 1) return false;
+    const occupant = objects.find(o => o.x === x && o.y === y && o !== dragObj);
+    return true;
+}
+document.addEventListener('keydown', (e) => {
+    if(!selectedObj || isLevelComplete || isDragging) return;
+    let changed = false;
+    if((e.key === 'ArrowRight' || e.key === 'd') && !selectedObj.locked) { selectedObj.rot = selectedObj.rot === 0 ? 1 : 0; changed = true}
+    else if((e.key === 'ArrowLeft' || e.key === 'a') && !selectedObj.locked) { selectedObj.rot = selectedObj.rot === 0 ? 1 : 0; changed = true}
+    if(changed) calculateLaser();
+});
+document.getElementById('btn-select-level').addEventListener('click', () => {
+    let lvl = prompt("Enter level (1-10):");
+    if(lvl && !isNaN(lvl)) initLevel(parseInt(lvl) - 1);
+});
+document.getElementById('btn-how-to').addEventListener('click', () => alert("Controls:\n1. DRAG mirror to grid.\n2. CLICK to select.\n3. ARROW KEYS to rotate."));
+initLevel(0);
