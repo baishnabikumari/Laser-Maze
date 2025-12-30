@@ -170,7 +170,7 @@ function calculateLaser(){
             }
         }
         if(steps > 0 || hitObject || hitEdge){
-            let segment = { x1: beam.x, y: beam.y, x2: currX, y2: currY, dir: beam.dir, edge: hitEdge, hitObject };
+            let segment = { x1: beam.x, y1: beam.y, x2: currX, y2: currY, dir: beam.dir, edge: hitEdge, hitObject };
             lasers.push(segment);
             if(hitObject){
                 if(hitObject.type === TYPE.MIRROR){
