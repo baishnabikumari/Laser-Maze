@@ -15,7 +15,7 @@ const COLORS = {
     bgGradientEnd: '#0f2b38',
     gridBorder: '#000000',
     gridFill: '#134B5F',
-    gridHighlength: 'rgba(255,255,255,0.2)',
+    gridHighlight: 'rgba(255,255,255,0.2)',
     blockTop: '#ecf0f1',
     blockSide: '#bdc3c7',
     wallTop: '#34495e',
@@ -73,7 +73,7 @@ const asciiLevels = [
 
 function parseLevel(asciiGrid) {
     const rows = asciiGrid.length;
-    const cols = asciiGrid.length;
+    const cols = asciiGrid[0].length;
     let map = [], objs = [];
     for(let y = 0; y < rows; y++){
         let mapRow = [];
@@ -86,11 +86,12 @@ function parseLevel(asciiGrid) {
             else if (char === 'T') obj = { type: TYPE.TARGET, locked: true};
             else if (char === '^') obj = { type: TYPE.SOURCE, dir: DIR.UP, locked: true};
             else if (char === '>') obj = { type: TYPE.SOURCE, dir: DIR.RIGHT, locked: true};
-            else if (char === '<') obj = { type: TYPE.SOURCE, dir: DIR.DOWN, locked: true};
+            else if (char === 'v') obj = { type: TYPE.SOURCE, dir: DIR.DOWN, locked: true};
+            else if (char === '<') obj = { type: TYPE.SOURCE, dir: DIR.LEFT, locked: true};
             else if (char === '/') obj = { type: TYPE.MIRROR, rot: 0, locked: false};
             else if (char === '\\') obj = { type: TYPE.MIRROR, rot: 1, locked: false};
             else if (char === '%') obj = { type: TYPE.SPLITTER, rot: 0, locked: false};
-            if(obj) { obj.x = x; obj.y = y; objs.push(objs);}
+            if(obj) { obj.x = x; obj.y = y; objs.push(obj);}
         }
         map.push(mapRow);
     }
@@ -104,7 +105,7 @@ function resizeCanvas(){
     if (levelMap.length > 0) {
         const mapH = levelMap.length;
         const mapW = levelMap[0].length;
-        const maxTileW = (canvas.width - 40) / napW;
+        const maxTileW = (canvas.width - 40) / mapW;
         const maxTileH = (canvas.height - 40) / mapH;
         TILE_SIZE = Math.min(BASE_TILE_SIZE, maxTileW, maxTileH);
         gridOffsetX = (canvas.width - (mapW * TILE_SIZE)) / 2;
@@ -375,7 +376,7 @@ function drawAnimatedLasers(){
 
 function drawGridTile(x, y){
     const px = gridOffsetX + x * TILE_SIZE;
-    const py = gridOffsetY + x * TILE_SIZE;
+    const py = gridOffsetY + y * TILE_SIZE;
     ctx.fillStyle = COLORS.gridFill;
     ctx.strokeStyle = COLORS.gridBorder;
     ctx.lineWidth = 3;
@@ -489,7 +490,10 @@ canvas.addEventListener('mouseup', (e) => {
 function isValidMove(x, y){
     if(y < 0 || y >= levelMap.length || x < 0 || x >= levelMap[0].length) return false;
     if(levelMap[y][x] !== 1) return false;
+
+    //space is occupied or not
     const occupant = objects.find(o => o.x === x && o.y === y && o !== dragObj);
+    if(occupant) return true;
     return true;
 }
 document.addEventListener('keydown', (e) => {
