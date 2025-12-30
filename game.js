@@ -62,12 +62,12 @@ const asciiLevels = [
         "  /    ",
     ],
     [
-        ".......",
-        ".v.....",
-        ".......",
-        "....T..",
-        ".......",
-        "  /    "
+        "....T....",
+        ".........",
+        "T.......T",
+        ".........",
+        "....^....",
+        " % / \\  "
     ],
 ];
 
@@ -493,7 +493,7 @@ function isValidMove(x, y){
 
     //space is occupied or not
     const occupant = objects.find(o => o.x === x && o.y === y && o !== dragObj);
-    if(occupant) return true;
+    if(occupant) return false;
     return true;
 }
 document.addEventListener('keydown', (e) => {
