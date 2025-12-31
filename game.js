@@ -1,5 +1,6 @@
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
+const placeSound = new Audio('place.mp3')
 const container = document.querySelector('.game-container');
 const levelIndicator = document.getElementById('level-indicator');
 const messageBox = document.getElementById('game-message');
@@ -237,8 +238,13 @@ function calculateLaser(){
         while(true) {
             let nextX = currX + dx;
             let nextY = currY + dy;
-            if(nextY < 0 || nextY >= levelMap.length || nextX < 0 || nextX >= levelMap[0].length || levelMap[nextY][nextX] !== 1){
-                hitEdge = true; break;
+            if(nextY < 0 || nextY >= levelMap.length || nextX < 0 || nextX >= levelMap[0].length){
+                hitEdge = true;
+                break;
+            }
+            if(levelMap[nextY][nextX] !== 1){
+                hitEdge = true;
+                break;
             }
             currX = nextX; currY = nextY; steps++;
             let obj = activeObjects.find(o => o.x === currX && o.y === currY);
@@ -274,15 +280,22 @@ function calculateLaser(){
 
 function getVisualCoords(l){
     let x1 = gridOffsetX + l.x1 * TILE_SIZE + TILE_SIZE/2;
-    let y1 = gridOffsetY + l.y1 * TILE_SIZE + TILE_SIZE/2 - BLOCK_HEIGHT/2;
+    let y1 = gridOffsetY + l.y1 * TILE_SIZE + TILE_SIZE/2 - BLOCK_HEIGHT;
     let x2 = gridOffsetX + l.x2 * TILE_SIZE + TILE_SIZE/2;
-    let y2 = gridOffsetY + l.y2 * TILE_SIZE + TILE_SIZE/2 - BLOCK_HEIGHT/2;
+    let y2 = gridOffsetY + l.y2 * TILE_SIZE + TILE_SIZE/2 - BLOCK_HEIGHT;
     
     if(l.edge){
-        let dist = TILE_SIZE/2;
+        let dist = TILE_SIZE / 2;
         if(l.dir === DIR.UP) y2 -= dist;
         else if(l.dir === DIR.RIGHT) x2 += dist;
         else if(l.dir === DIR.DOWN) y2 += dist;
+        else if(l.dir === DIR.LEFT) x2 -= dist;
+    }
+    if(l.hitObj && l.hitObj.type === TYPE.WALL){
+        let dist = TILE_SIZE / 3;
+        if(l.dir === DIR.UP) y2 += dist;
+        else if(l.dir === DIR.RIGHT) x2 -= dist;
+        else if(l.dir === DIR.DOWN) y2 -= dist;
         else if(l.dir === DIR.LEFT) x2 += dist;
     }
     return { x1, y1, x2, y2 };
@@ -573,8 +586,18 @@ canvas.addEventListener('mouseup', (e) => {
     if(isDragging && dragObj){
         const dropX = Math.round((dragPos.x - gridOffsetX - TILE_SIZE/2) / TILE_SIZE);
         const dropY = Math.round((dragPos.y - gridOffsetY - TILE_SIZE/2) / TILE_SIZE);
-        if(isValidMove(dropX, dropY)){ dragObj.x = dropX; dragObj.y = dropY; }
-        isDragging = false; dragObj = null; calculateLaser();
+        if(isValidMove(dropX, dropY)){
+            if(dragObj.x !== dropX || dragObj.y !== dropY){
+                dragObj.x = dropX;
+                dragObj.y = dropY;
+
+                placeSound.currentTime = 0;
+                placeSound.play().catch(e => console.log("Audio Play failed:", e));
+            }
+        }
+        isDragging = false;
+        dragObj = null;
+        calculateLaser();
     }
 });
 function isValidMove(x, y){
