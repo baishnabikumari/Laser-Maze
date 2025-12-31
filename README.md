@@ -1,5 +1,6 @@
 # Laser Maze
 > **Reflect-split-Connect - controls the beam and adjust the mirrors to make the beam hit the target(yellow dot).**
+
 > **Real time Ray-Casting PHYSICS**
 
 ##
@@ -12,6 +13,7 @@
 
 ## About this GAME(Laser-Maze)
 **Why Laser Maze?** cuz it is a physics based puzzle game built with using the concept of laser and the mirror reflections.
+
 > **Build using plain Js, CSS and HTML5 Canvas.**
 
 # Real-Time physics
@@ -19,16 +21,18 @@
 **One wrong angle and the reflection or the connection breaks.**
 
 # Features
-> **Real-Time Raycasting**
-> **Drag & Drop system**
-> **Particle effect in laser beam**
-> **Levels are made up of ASCII texttile(strings)**
-> **Sound Effects**
-> **LocalStorage**
+* **Real-Time Raycasting**
+* **Drag & Drop system**
+* **Particle effect in laser beam**
+* **Levels are made up of ASCII texttile(strings)**
+* **Sound Effects**
+* **LocalStorage**
 
 # Controls
 > **Use Mouse to DRAG the mirror and place them on grids.**
+
 > **Click the Objects(mirror or splitter) To turn on the ROTATE mode (a green outline will appear).**
+
 > **Use Arrow after you see a green outline on the selected object to change the directions.**
 
 ##
@@ -45,8 +49,11 @@ Splitter(%)
 
 # Code structure
 > **index.html** Ui, canvas etc.
+
 > **style.css** theme uses: root.
+
 > **game.js** Logic and Physics.
+
 > **2 .mp3 files(sound effects)**
 
 ##
