@@ -255,18 +255,30 @@ function calculateLaser(){
             }
         }
         if(steps > 0 || hitObject || hitEdge){
-            let segment = { x1: beam.x, y1: beam.y, x2: currX, y2: currY, dir: beam.dir, edge: hitEdge, hitObject };
-            lasers.push(segment);
+            let isTerminal = true;
+
             if(hitObject){
                 if(hitObject.type === TYPE.MIRROR){
                     let newDir = reflect(beam.dir, hitObject.rot);
-                    if(newDir !== -1) beams.push({x: currX, y: currY, dir: newDir});
+                    if(newDir !== -1){
+                        beams.push({x: currX, y: currY, dir: newDir});
+                        isTerminal = false;
+                    }
                 } else if(hitObject.type === TYPE.SPLITTER){
                     beams.push({ x: currX, y: currY, dir: beam.dir});
                     let newDir = reflect(beam.dir, hitObject.rot);
                     if(newDir !== -1) beams.push({x: currX, y: currY, dir: newDir});
+                    isTerminal = false;
                 }
             }
+            lasers.push({
+                x1: beam.x, y1: beam.y,
+                x2: currX, y2: currY,
+                dir: beam.dir,
+                edge: hitEdge,
+                hitObj: hitObject,
+                terminal: isTerminal
+            });
         }
     }
     totalCalculatedLength = 0;
@@ -433,7 +445,7 @@ function drawAnimatedLasers(){
 
     let remainingDrawLen = currentLaserLength;
     let activePath = [];
-    let endPoint = null;
+    let sparkPoints = [];
 
     for(let i = 0; i<lasers.length; i++){
         const l = lasers[i];
@@ -443,12 +455,17 @@ function drawAnimatedLasers(){
         if(remainingDrawLen >= segmentLen){
             activePath.push(coords);
             remainingDrawLen -= segmentLen;
+
+            if(l.terminal){
+                sparkPoints.push({x: coords.x2, y: coords.y2});
+            }
         } else {
             let percent = remainingDrawLen / segmentLen;
             let pX = coords.x1 + (coords.x2 - coords.x1) * percent;
             let pY = coords.y1 + (coords.y2 - coords.y1) * percent;
             activePath.push({x1: coords.x1, y1: coords.y1 ,x2: pX, y2: pY});
-            endPoint = { x: pX, y: pY};
+
+            sparkPoints.push({x: pX, y: pY});
             remainingDrawLen = 0;
             break; 
         }
@@ -466,13 +483,13 @@ function drawAnimatedLasers(){
     ctx.beginPath(); activePath.forEach(p => { ctx.moveTo(p.x1, p.y1); ctx.lineTo(p.x2, p.y2); }); ctx.stroke();
     ctx.globalCompositeOperation = 'source-over'; ctx.shadowBlur = 0;
 
-    if(endPoint){
-        spawnSparks(endPoint.x, endPoint.y);
+    sparkPoints.forEach(pt => {
+        spawnSparks(pt.x, pt.y);
         ctx.globalCompositeOperation = 'lighter';
         ctx.fillStyle = '#fff'; ctx.shadowColor = COLORS.laserMid; ctx.shadowBlur = 15;
-        ctx.beginPath(); ctx.arc(endPoint.x, endPoint.y, TILE_SIZE/10, 0, Math.PI*2); ctx.fill();
+        ctx.beginPath(); ctx.arc(pt.x, pt.y, TILE_SIZE/10, 0, Math.PI*2); ctx.fill();
         ctx.globalCompositeOperation = 'source-over'; ctx.shadowBlur = 0;
-    }
+    });
 }
 
 function drawGridTile(x, y){
