@@ -98,7 +98,7 @@ const asciiLevels = [
         "W...>...W",
         "W.......W",
         "WWWWWWWWW",
-        " / \\ / \\"
+        " / \\ / \\ "
     ],
     [
         "T.......T",
