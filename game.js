@@ -20,8 +20,6 @@ const COLORS = {
     gridBorder: '#000000',
     gridFill: '#134B5F',
     gridHighlight: 'rgba(255,255,255,0.2)',
-    blockTop: 'ecf0f1',
-    blockSide: '#bdc3c7',
     blockTop: '#ecf0f1',
     blockSide: '#bdc3c7',
     wallTop: '#95a5a6',
@@ -130,14 +128,14 @@ const asciiLevels = [
         " % / \\ / "
     ],
     [
-        "wwwwwwwwwwwww",
-        "W.T.......T.W",
-        "W.W.......W.W",
-        "W.W.......W.W",
-        "W...>...<...W",
-        "W...........W",
-        "WWWWWWWWWWWWW",
-        "  % % / \\ /  "
+        ".W.W.W.W.",
+        ".........",
+        "T.......T",
+        ".........",
+        "T.......T",
+        ".........",
+        ".>.....<.",
+        " % % / \\ "
     ],
     [
         ".....T.....",
@@ -488,11 +486,18 @@ function drawObject3D(obj, cx, cy, lifted = false){
     }
     const topY = baseY - BLOCK_HEIGHT;
     if(obj.type === TYPE.WALL){
-        ctx.fillStyle = COLORS.wallSide; roundRect(ctx, baseX - half, baseY - half, size, size, 8, true);
-        ctx.fillStyle = COLORS.wallTop; roundRect(ctx, baseX - half, topY - half, size, size, 8, true);
+        ctx.fillStyle = COLORS.wallSide;
+        roundRect(ctx, baseX - half, baseY - half, size, size, 8, true);
+        ctx.fillStyle = COLORS.wallTop;
+        roundRect(ctx, baseX - half, topY - half, size, size, 8, true);
+
         ctx.strokeStyle = 'rgba(0,0,0,0.3)'; ctx.lineWidth = 3;
-        ctx.beginPath(); ctx.moveTo(baseX - half + 10, topY - half + 10); ctx.lineTo(baseX + half - 10, topY + half - 10);
-        ctx.moveTo(baseX + half - 10, topY - half + 10); ctx.lineTo(baseX - half + 10); ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(baseX - half + 10, topY - half + 10);
+        ctx.lineTo(baseX + half - 10, topY + half - 10);
+        ctx.moveTo(baseX + half - 10, topY - half + 10);
+        ctx.lineTo(baseX - half + 10, topY + half - 10);
+        ctx.stroke();
         return;
     }
     ctx.fillStyle = COLORS.blockSide; roundRect(ctx, baseX - half, baseY - half, size, size, 8, true);
