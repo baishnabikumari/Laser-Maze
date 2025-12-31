@@ -666,5 +666,43 @@ document.getElementById('btn-select-level').addEventListener('click', openLevelM
 //     let lvl = prompt("Enter level (1-10):");
 //     if(lvl && !isNaN(lvl)) initLevel(parseInt(lvl) - 1);
 // });
-document.getElementById('btn-how-to').addEventListener('click', () => alert("Controls:\n1. DRAG mirror to grid.\n2. CLICK to select.\n3. ARROW KEYS to rotate."));
+const infoModal = document.getElementById('info-modal');
+const infoTitle = document.getElementById('info-title');
+const infoBody = document.getElementById('info-body');
+const btnCloseInfo = document.getElementById('btn-close-info');
+const btnFeatures = document.getElementById('btn-features');
+
+function showInfoModal(title, text){
+    infoTitle.innerHTML = title;
+    infoBody.innerHTML = text;
+    infoModal.classList.remove('hidden');
+}
+if(btnCloseInfo){
+    btnCloseInfo.onclick = () =>  {
+        infoModal.classList.add('hidden');
+    };
+}
+//button logic for how to play button
+document.getElementById('btn-how-to').addEventListener('click', () => {
+    const text = `
+    1. <strong>DRAG</strong> mirrors and splitters from down grids(inventory) onto the grid.
+    2. <strong>CLICK</strong> on mirror or splitter then a green OUTLINE will appear(ROTATE).
+    3. Use <strong>ARROW KEYS</strong>(Left/Right) to rotate the selected object.
+    4. <strong>GOAL:</strong> Pass the laser with all the yellow targets with the laser beam using mirrors and splitters.
+    `;
+    showInfoModal("HOW TO PLAY", text);
+});
+// button logic for features button
+if(btnFeatures){
+    btnFeatures.addEventListener('click', () => {
+        const text = `
+        - 10 Unique, Hand made levels(using ASCII tiles).
+        - Real like laser Beam and logics.
+        - Mirror & Splitter(2 way reflection).
+        - Local storage for progress saving.
+        - Particle effect and neon visuals.
+        `;
+        showInfoModal("FEATURES", text);
+    });
+}
 initLevel(0);

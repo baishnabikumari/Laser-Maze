@@ -31,7 +31,7 @@
         </div>
         <div class="footer-right">
             <button class="btn-red" onclick="window.open('https://github.com',_'blank')">GITHUB</button>
-            <button class="btn-red">FEATURES</button>
+            <button class="btn-red" id="btn-features">FEATURES</button>
         </div>
     </div>
     <div id="level-modal" class="modal-overlay hidden">
@@ -39,6 +39,15 @@
             <h2 class="modal-title">SELECT LEVEL</h2>
             <div id="level-grid" class="level-grid"></div>
             <button class="btn-red btn-close" id="btn-close-modal">CLOSE</button>
+        </div>
+    </div>
+    <div id="info-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <h2 id="info-title" class="modal-title">TITLE</h2>
+            <div id="info-body" class="info-text">
+                <!--Text-->
+            </div>
+            <button class="btn-red btn-close" id="btn-close-info">CLOSE</button>
         </div>
     </div>
 
