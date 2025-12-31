@@ -1,6 +1,7 @@
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
-const placeSound = new Audio('place.mp3')
+const placeSound = new Audio('place.mp3');
+const targetSound = new Audio('gamelevelcomplete.mp3');
 const container = document.querySelector('.game-container');
 const levelIndicator = document.getElementById('level-indicator');
 const messageBox = document.getElementById('game-message');
@@ -321,17 +322,21 @@ function checkWin(){
     if(target.length > 0 && target.every(t => t.active)) {
         if(!isLevelComplete){
             isLevelComplete = true;
-
+            
             if(currentLevelIdx + 1 >= maxUnlockedLevel){
                 maxUnlockedLevel = currentLevelIdx + 2;
                 localStorage.setItem('laserMaze_unlockedLevel', maxUnlockedLevel);
             }
             setTimeout(() => {
+
+                targetSound.currentTime = 0;
+                targetSound.play().catch(e => console.log(e));
+
                 messageBox.classList.remove('hidden');
                 setTimeout(() => {
                     initLevel(currentLevelIdx + 1);
                 }, 2000);
-            }, 1500);
+            }, 700);
         }
     }
 }
