@@ -7,8 +7,10 @@
 }
 
 :root{
+    --bg-color: #000000;
     --primary-red:#f23549;
     --text-white:#fff;
+    --glow-blue: #00d2ff;
 }
 
 * {
@@ -20,7 +22,8 @@
 }
 
 body {
-    background-color: #000;
+    background-color: var(--bg-color);
+    color: var(--text-white);
     height: 100vh;
     width: 100vw;
     overflow: hidden;
@@ -33,9 +36,9 @@ body {
 .ui-wrapper {
     position: relative;
     width: 100%;
-    max-width: 1600px;
-    aspect-ratio: 16 / 9;
-    background-image: url('UI.png');
+    max-width: 1786px;
+    aspect-ratio: 1786 / 904;
+    background-image: url('newUI.png');
     background-size: 100% 100%;
     background-position: center;
     background-position: no-repeat;
@@ -52,11 +55,14 @@ body {
     justify-content: center;
     align-items: center;
     transition: transform 0.1s, opacity 0.2s;
-    text-shadow: 0 0 10px rgba(255,255,255,0.5);
+    text-shadow: 0 0 10px rgba(0,210,255,0.8);
+    z-index: 10;
+    font-size: 1.6vw;
 }
 
 .slot-btn:hover {
     opacity: 0.8;
+    text-shadow: 0 0 20px white;
 }
 
 .slot-btn:active{
@@ -65,40 +71,41 @@ body {
 
 .slot-level{
     position: absolute;
-    top: 4.5%;
-    left: 5.5%;
-    width: 13%;
-    height: 7%;
+    top: 6.6%;
+    left: 4.7%;
+    width: 10.6%;
+    height: 5.5%;
     display: flex;
     justify-content: center;
     align-items: center;
     color: white;
-    font-size: 1.8vw;
-    text-shadow: 0 0 10px #00d2ff;
+    font-size: 1.6vw;
+    text-shadow: 0 0 10px var(--glow-blue);
+    pointer-events: none;
 }
 
 .slot-restart {
-    top: 4.5%;
-    right: 5.5%;
-    width: 13%;
-    height: 7%;
-    font-size: 1.8vw;
+    top: 6.6%;
+    right: 4.5%;
+    width: 10.6%;
+    height: 5.5%;
 }
 
 .slot-game{
     position: absolute;
-    top: 15.5%;
-    left: 5.5%;
-    width: 46%;
-    height: 78%;
-    padding: 1.8%;
+    top: 17.7%;
+    left: 4.7%;
+    width: 46.5%;
+    height: 79.6%;
+    padding: 1.5%;
 }
 
 .game-container {
     width: 100%;
     height: 100%;
-    border-radius: 15px;
+    border-radius: 20px;
     overflow: hidden;
+    position: relative;
 }
 
 canvas {
@@ -109,68 +116,70 @@ canvas {
 
 .slot-inventory{
     position: absolute;
-    top: 15.5%;
-    right: 10.5%;
-    width: 32%;
-    height: 38%;
+    top: 17.7%;
+    left: 53.7%;
+    width: 30.8%;
+    height: 36.5%;
     display: flex;
     justify-content: center;
     align-items: center;
-    color: rgba(255,255,255,0.5);
+    padding: 20px;
+    text-align: center;
+    color: rgba(255,255,255,0.4);
 }
 
 .inv-text h3 {
     font-size: 2vw;
-    color: #00d2ff;
+    color: var(--glow-blue);
+    margin-bottom: 5px;
 }
 
 .inv-text p {
     font-family: sans-serif;
-    font-size: 1vw;
+    font-size: 0.9vw;
 }
 
 .slot-inv-label{
     position: absolute;
-    top: 20%;
-    right: 6%;
-    font-size: 1.5vw;
+    top: 22%;
+    left: 22%;
+    font-size: 1.4vw;
     color: white;
     writing-mode: vertical-rl;
     text-orientation: mixed;
-    text-shadow: 0 0 10px #00d2ff;
-    letter-spacing: 3px;
+    text-shadow: 0 0 10px var(--glow-blue);
+    letter-spacing: 2px;
 }
 
 .slot-select {
-    top: 57%;
-    right: 24.5%;
-    width: 19%;
-    height: 7%;
-    font-size: 1.6vw;
+    top: 62%;
+    left: 53.7%;
+    width: 17.9%;
+    height: 6.6%;
 }
 
 .slot-hint {
-    top: 57%;
-    right: 9%;
-    width: 13%;
-    height: 7%;
-    font-size: 1.8vw;
+    top: 62%;
+    left: 73.9%;
+    width: 10.6%;
+    height: 6.6%;
+    text-shadow: 0 0 10px #ff3333;
 }
 
 .slot-git{
-    bottom: 12.5%;
-    right: 5.5%;
-    width: 16%;
-    height: 7%;
-    font-size: 1.4vw;
+    top: 86.3%;
+    right: 2.8%;
+    width: 14.5%;
+    height: 5.5%;
+    font-size: 1.3vw;
 }
 
 .slot-help{
-    bottom: 4%;
-    right: 5.5%;
-    width: 17%;
-    height: 7%;
-    font-size: 1.5vw;
+    bottom: 3.3%;
+    right: 2.8%;
+    width: 14.5%;
+    height: 5.5%;
+    font-size: 1.3vw;
 }
 
 .modal-overlay {
@@ -221,16 +230,16 @@ canvas {
     border-radius: 15px;
     aspect-ratio: 1;
     cursor: pointer;
+    box-shadow: 0 4px 0 #c0392b;
     display: flex;
     justify-content: center;
     align-items: center;
-    box-shadow: 0 4px 0 #c0392b;
 }
 
-.level-btn:active{
+/* .level-btn:active{
     transform: translate(2px);
     box-shadow: 0 0 0 #c0392b;
-}
+} */
 
 .level-btn.locked{
     background-color: #e58e26;
@@ -241,6 +250,19 @@ canvas {
 .lock-icon{
     width: 24px;
     fill: #3d1e1e;
+}
+
+.btn-red {
+    background-color: var(--primary-red);
+    color: white;
+    border: none;
+    padding: 10px 40px;
+    font-family: 'Gagalin', sans-serif;
+    font-size: 1.5rem;
+    border-radius: 30px;
+    cursor: pointer;
+    box-shadow: 0 4px 0 #c0392b;
+    margin-top: 10px;
 }
 
 .hidden{
@@ -260,14 +282,12 @@ canvas {
     border-radius: 15px;
     z-index: 50;
     white-space: nowrap;
-    box-shadow: 0 0 30px rgba(255, 51, 51, 0.5);
 }
 
 .info-text {
     text-align: left;
     font-family: sans-serif;
     font-size: 1.2rem;
-    line-height: 1.6;
     margin-bottom: 20px;
     color: #ffd1d1;
 }
@@ -280,11 +300,11 @@ canvas {
     .ui-wrapper{
         width: 100%;
         height: auto;
-        aspect-ratio: auto;
+        /* aspect-ratio: auto;
         min-height: 100vh;
-        background-size: cover;
+        background-size: cover; */
     }
-    .slot-game{
+    /* .slot-game{
         width: 90%;
         left: 5%;
         height: 50vh;
@@ -292,5 +312,5 @@ canvas {
     }
     .slot-inventory{
         display: none;
-    }
+    } */
 }
