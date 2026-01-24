@@ -7,36 +7,31 @@
     <title>LASER MAZE - All new Experience.</title>
     <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
     <div class="ui-wrapper">
 
-        <div class="slot-level">
-            LEVEL - <span id="level-indicator">01</span>
+        <div class="zone-level">
+            <span id="level-indicator">01</span>
         </div>
 
-        <button class="slot-btn slot-restart" id="btn-restart">RESTART</button>
+        <button class="click-zone zone-restart" id="btn-restart" title="Restart Level"></button>
 
-        <div class="slot-game">
+        <div class="zone-game">
             <div class="game-container">
                 <canvas id="gameCanvas"></canvas>
                 <div id="game-message" class="hidden">LEVEL COMPLETE!</div>
             </div>
         </div>
 
-        <div class="slot-inventory">
-            <div class="inv-text">
-                <h3>INVENTORY</h3>
-                <p>Drag mirror from the bottom of the grid.</p>
-            </div>
+        <div class="zone-inventory">
+            <div id="console-screen">SYSTEM READY...</div>
         </div>
 
-        <div class="slot-inv-label">INVENTORY</div>
+        <button class="click-zone zone-select" id="btn-select-level" title="Select Level"></button>
 
-        <button class="slot-btn slot-select" id="btn-select-level">SELECT LEVEL</button>
-        <button class="slot-btn slot-hint" id="btn-hint">HINT ?</button>
-        <button class="slot-btn slot-git" onclick="window.open('https://github.com/baishnabikumari/Laser-Maze', '_blank')">GIT-REPO</button>
-        <button class="slot-btn slot-help" id="btn-how-to">HOW TO PLAY</button>
+        <button class="click-zone zone-hint" id="btn-hint" title="Get Hint"></button>
+        <button class="click-zone zone-git" onclick="window.open('https://github.com/baishnabikumari/Laser-Maze', '_blank')" title="Github"></button>
+        <button class="click-zone zone-help" id="btn-how-to" title="How to Play"></button>
     </div>
 
     <div id="level-modal" class="modal-overlay hidden">
@@ -57,5 +52,4 @@
     <!--js fetch-->
     <script src="game.js"></script>
 </body>
-
 </html>

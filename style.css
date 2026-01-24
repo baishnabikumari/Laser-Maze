@@ -41,9 +41,49 @@ body {
     background-image: url('newUI.png');
     background-size: 100% 100%;
     background-position: center;
-    background-position: no-repeat;
+    background-repeat: no-repeat;
 }
 
+.click-zone {
+    position: absolute;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    z-index: 20;
+}
+
+.zone-level{
+    position: absolute;
+    top: 7.6%;
+    left: 15%;
+    width: 6%;
+    height: 5.5%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.2vw;
+    text-shadow: 0 0 15px var(--glow-blue);
+    pointer-events: none;
+    color: white;
+}
+
+.zone-restart{
+    top: 6.6%;
+    right: 4.5%;
+    width: 10.6%;
+    height: 5.5%;
+    border-radius: 30px;
+}
+
+.zone-game{
+    position: absolute;
+    top: 17.7%;
+    left: 4.5%;
+    width: 46.5%;
+    height: 79.6%;
+    padding: 1.5%;
+}
+/* 
 .slot-btn{
     position: absolute;
     background: transparent;
@@ -98,7 +138,7 @@ body {
     width: 46.5%;
     height: 79.6%;
     padding: 1.5%;
-}
+} */
 
 .game-container {
     width: 100%;
@@ -114,7 +154,73 @@ canvas {
     display: block;
 }
 
-.slot-inventory{
+.zone-inventory {
+    position: absolute;
+    top: 17.7%;
+    left: 53.7%;
+    width: 30.8%;
+    height: 36.5%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    pointer-events: none;
+}
+
+#console-screen {
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
+    font-size: 2vw;
+    color: #a6f0ff;
+    text-shadow: 0 0 10px #00d3ff, 0 0 20px #00d2ff;
+    text-align: center;
+    width: 80%;
+    text-transform: uppercase;
+    animation: pulseText 3s infinite alternate;
+}
+
+@keyframes pulseText {
+    0% {
+        opacity: 0.8;
+    }
+    100%{
+        opacity: 1;
+        text-shadow: 0 0 15px #00d2ff, 0 0 30px #00d2ff;
+    }
+}
+
+.zone-select{
+    top: 57%;
+    left: 53.7%;
+    width: 17.9%;
+    height: 6.6%;
+    border-radius: 20px;
+}
+
+.zone-hint {
+    top: 57%;
+    left: 73.9%;
+    width: 10.6%;
+    height: 6.6%;
+    border-radius: 20px;
+}
+
+.zone-git{
+    top: 79.3%;
+    right: 2.8%;
+    width: 14.5%;
+    height: 5.5%;
+    border-radius: 20px;
+}
+
+.zone-help {
+    bottom: 3.3%;
+    right: 2.8%;
+    width: 14.5%;
+    height: 5.5%;
+    border-radius: 20px;
+}
+
+/* .slot-inventory{
     position: absolute;
     top: 17.7%;
     left: 53.7%;
@@ -126,8 +232,8 @@ canvas {
     padding: 20px;
     text-align: center;
     color: rgba(255,255,255,0.4);
-}
-
+} */
+/* 
 .inv-text h3 {
     font-size: 2vw;
     color: var(--glow-blue);
@@ -180,8 +286,10 @@ canvas {
     width: 14.5%;
     height: 5.5%;
     font-size: 1.3vw;
+} */
+.hidden{
+    display: none !important;
 }
-
 .modal-overlay {
     position: fixed;
     top: 0;
@@ -265,10 +373,6 @@ canvas {
     margin-top: 10px;
 }
 
-.hidden{
-    display: none !important;
-}
-
 #game-message{
     position: absolute;
     top: 50%;
@@ -290,10 +394,6 @@ canvas {
     font-size: 1.2rem;
     margin-bottom: 20px;
     color: #ffd1d1;
-}
-
-.hidden {
-    display: none !important;
 }
 
 @media (max-width: 1024px){

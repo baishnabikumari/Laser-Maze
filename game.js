@@ -8,6 +8,19 @@ const messageBox = document.getElementById('game-message');
 const modal = document.getElementById('level-modal');
 const levelGrid = document.getElementById('level-grid');
 const btnClose = document.getElementById('btn-close-modal');
+const consoleScreen = document.getElementById('console-screen');
+
+//random messages
+const consoleMessage = [
+    "WELL DONE!",
+    "GOOD PLACEMENT",
+    "OPTIMIZING...",
+    "PATH ALIGNED",
+    "NICE MOVE",
+    "CALCULATING...",
+    "LASER STABLE",
+    "EXCELLENT!"
+];
 
 const BASE_TILE_SIZE = 70;
 let TILE_SIZE = 70;
@@ -17,10 +30,10 @@ let gridOffsetX = 0;
 let gridOffsetY = 0;
 
 const COLORS = {
-    bgGradientStart: '#1a5068',
-    bgGradientEnd: '#0f2b38',
-    gridBorder: '#000000',
-    gridFill: '#134B5F',
+    bgGradientStart: '#05101a',
+    bgGradientEnd: '#000000',
+    gridBorder: 'rgba(0, 210, 255, 0.1)',
+    gridFill: 'rgba(10, 20, 30, 0.8)',
     gridHighlight: 'rgba(255,255,255,0.2)',
     blockTop: '#ecf0f1',
     blockSide: '#bdc3c7',
@@ -305,7 +318,7 @@ function getVisualCoords(l){
         else if(l.dir === DIR.LEFT) x2 -= dist;
     }
     if(l.hitObj && l.hitObj.type === TYPE.WALL){
-        let dist = TILE_SIZE / 3;
+        let dist = TILE_SIZE * 0.38;
         if(l.dir === DIR.UP) y2 += dist;
         else if(l.dir === DIR.RIGHT) x2 -= dist;
         else if(l.dir === DIR.DOWN) y2 -= dist;
@@ -577,6 +590,11 @@ function roundRect(ctx, x, y, width, height, radius, fill) {
     if(fill) ctx.fill();
 }
 
+function updateConsole(){
+    const randomMsg = consoleMessage[Math.floor(Math.random() * consoleMessage.length)];
+    consoleScreen.innerText = randomMsg;
+}
+
 //Input
 function getGridPos(e){
     const rect = canvas.getBoundingClientRect();
@@ -621,7 +639,19 @@ canvas.addEventListener('mouseup', (e) => {
         dragObj = null;
         calculateLaser();
     }
+    if(isValidMove(dropX, dropY)){
+        if(dragObj.x !== dropX || dragObj.y !== dropY){
+            dragObj.x = dropY;
+            dragObj.y = dropY;
+
+            placeSound.currentTime = 0;
+            placeSound.play().catch(e => console.log("Audio play failed:", e))
+
+            updateConsole();
+        }
+    }
 });
+
 function isValidMove(x, y){
     if(y < 0 || y >= levelMap.length || x < 0 || x >= levelMap[0].length) return false;
     if(levelMap[y][x] !== 1) return false;
