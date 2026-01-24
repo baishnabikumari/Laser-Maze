@@ -51,8 +51,8 @@ const COLORS = {
     dragShadow: 'rgba(0,0,0,0.5)'
 };
 
-const TYPE = { EMPTY: 0, WALL: 1, MIRROR: 2, SOURCE: 4, TARGET: 5, SPLITTER: 6};
-const DIR = { UP: 0, RIGHT: 1, DOWN: 2, LEFT: 3};
+const TYPE = { EMPTY: 0, WALL: 1, MIRROR: 2, SOURCE: 4, TARGET: 5, SPLITTER: 6 };
+const DIR = { UP: 0, RIGHT: 1, DOWN: 2, LEFT: 3 };
 
 let currentLevelIdx = 0;
 let levelMap = [];
@@ -68,8 +68,8 @@ let animationFrameId;
 //drag
 let isDragging = false;
 let dragObj = null;
-let dragOffset = {x: 0, y: 0};
-let dragPos = {x: 0, y: 0};
+let dragOffset = { x: 0, y: 0 };
+let dragPos = { x: 0, y: 0 };
 
 const asciiLevels = [
     [
@@ -168,30 +168,30 @@ function parseLevel(asciiGrid) {
     const rows = asciiGrid.length;
     const cols = asciiGrid[0].length;
     let map = [], objs = [];
-    for(let y = 0; y < rows; y++){
+    for (let y = 0; y < rows; y++) {
         let mapRow = [];
         let rowStr = asciiGrid[y];
-        for(let x = 0; x < cols; x++){
+        for (let x = 0; x < cols; x++) {
             let char = rowStr[x] || ' ';
-            if(char === ' '){ mapRow.push(0); continue; } else { mapRow.push(1); }
+            if (char === ' ') { mapRow.push(0); continue; } else { mapRow.push(1); }
             let obj = null;
             if (char === 'W') obj = { type: TYPE.WALL, locked: true };
-            else if (char === 'T') obj = { type: TYPE.TARGET, locked: true};
-            else if (char === '^') obj = { type: TYPE.SOURCE, dir: DIR.UP, locked: true};
-            else if (char === '>') obj = { type: TYPE.SOURCE, dir: DIR.RIGHT, locked: true};
-            else if (char === 'v') obj = { type: TYPE.SOURCE, dir: DIR.DOWN, locked: true};
-            else if (char === '<') obj = { type: TYPE.SOURCE, dir: DIR.LEFT, locked: true};
-            else if (char === '/') obj = { type: TYPE.MIRROR, rot: 0, locked: false};
-            else if (char === '\\') obj = { type: TYPE.MIRROR, rot: 1, locked: false};
-            else if (char === '%') obj = { type: TYPE.SPLITTER, rot: 0, locked: false};
-            if(obj) { obj.x = x; obj.y = y; objs.push(obj);}
+            else if (char === 'T') obj = { type: TYPE.TARGET, locked: true };
+            else if (char === '^') obj = { type: TYPE.SOURCE, dir: DIR.UP, locked: true };
+            else if (char === '>') obj = { type: TYPE.SOURCE, dir: DIR.RIGHT, locked: true };
+            else if (char === 'v') obj = { type: TYPE.SOURCE, dir: DIR.DOWN, locked: true };
+            else if (char === '<') obj = { type: TYPE.SOURCE, dir: DIR.LEFT, locked: true };
+            else if (char === '/') obj = { type: TYPE.MIRROR, rot: 0, locked: false };
+            else if (char === '\\') obj = { type: TYPE.MIRROR, rot: 1, locked: false };
+            else if (char === '%') obj = { type: TYPE.SPLITTER, rot: 0, locked: false };
+            if (obj) { obj.x = x; obj.y = y; objs.push(obj); }
         }
         map.push(mapRow);
     }
     return { map, objs };
 }
 
-function resizeCanvas(){
+function resizeCanvas() {
     const rect = container.getBoundingClientRect();
     canvas.width = rect.width;
     canvas.height = rect.height;
@@ -208,8 +208,8 @@ function resizeCanvas(){
 }
 window.addEventListener('resize', resizeCanvas);
 
-function initLevel(idx){
-    if(idx >= asciiLevels.length) idx = 0;
+function initLevel(idx) {
+    if (idx >= asciiLevels.length) idx = 0;
     currentLevelIdx = idx;
     levelIndicator.innerText = (currentLevelIdx + 1).toString().padStart(2, '0');
     messageBox.classList.add('hidden');
@@ -223,10 +223,10 @@ function initLevel(idx){
     particles = [];
     resizeCanvas();
     calculateLaser();
-    if(!animationFrameId) renderLoop();
+    if (!animationFrameId) renderLoop();
 }
 
-function calculateLaser(){
+function calculateLaser() {
     lasers = [];
     objects.filter(o => o.type === TYPE.TARGET).forEach(t => t.active = false);
     const activeObjects = objects.filter(o => o !== dragObj);
@@ -236,51 +236,51 @@ function calculateLaser(){
     }));
 
     let processedSteps = 0;
-    while(beams.length > 0 && processedSteps < 100){
+    while (beams.length > 0 && processedSteps < 100) {
         let beam = beams.shift();
         processedSteps++;
         let currX = beam.x, currY = beam.y;
         let dx = 0, dy = 0;
 
-        if(beam.dir === DIR.UP) dy = -1;
-        else if(beam.dir === DIR.RIGHT) dx = 1;
-        else if(beam.dir === DIR.DOWN) dy = 1;
-        else if(beam.dir === DIR.LEFT) dx = -1;
+        if (beam.dir === DIR.UP) dy = -1;
+        else if (beam.dir === DIR.RIGHT) dx = 1;
+        else if (beam.dir === DIR.DOWN) dy = 1;
+        else if (beam.dir === DIR.LEFT) dx = -1;
 
         let hitObject = null, hitEdge = false, steps = 0;
 
-        while(true) {
+        while (true) {
             let nextX = currX + dx;
             let nextY = currY + dy;
-            if(nextY < 0 || nextY >= levelMap.length || nextX < 0 || nextX >= levelMap[0].length){
+            if (nextY < 0 || nextY >= levelMap.length || nextX < 0 || nextX >= levelMap[0].length) {
                 hitEdge = true;
                 break;
             }
-            if(levelMap[nextY][nextX] !== 1){
+            if (levelMap[nextY][nextX] !== 1) {
                 hitEdge = true;
                 break;
             }
             currX = nextX; currY = nextY; steps++;
             let obj = activeObjects.find(o => o.x === currX && o.y === currY);
-            if(obj) {
-                if(obj.type === TYPE.TARGET) { obj.active = true; }
+            if (obj) {
+                if (obj.type === TYPE.TARGET) { obj.active = true; }
                 else { hitObject = obj; break; }
             }
         }
-        if(steps > 0 || hitObject || hitEdge){
+        if (steps > 0 || hitObject || hitEdge) {
             let isTerminal = true;
 
-            if(hitObject){
-                if(hitObject.type === TYPE.MIRROR){
+            if (hitObject) {
+                if (hitObject.type === TYPE.MIRROR) {
                     let newDir = reflect(beam.dir, hitObject.rot);
-                    if(newDir !== -1){
-                        beams.push({x: currX, y: currY, dir: newDir});
+                    if (newDir !== -1) {
+                        beams.push({ x: currX, y: currY, dir: newDir });
                         isTerminal = false;
                     }
-                } else if(hitObject.type === TYPE.SPLITTER){
-                    beams.push({ x: currX, y: currY, dir: beam.dir});
+                } else if (hitObject.type === TYPE.SPLITTER) {
+                    beams.push({ x: currX, y: currY, dir: beam.dir });
                     let newDir = reflect(beam.dir, hitObject.rot);
-                    if(newDir !== -1) beams.push({x: currX, y: currY, dir: newDir});
+                    if (newDir !== -1) beams.push({ x: currX, y: currY, dir: newDir });
                     isTerminal = false;
                 }
             }
@@ -297,59 +297,60 @@ function calculateLaser(){
     totalCalculatedLength = 0;
     lasers.forEach(l => {
         const c = getVisualCoords(l);
-        totalCalculatedLength += Math.sqrt(Math.pow(c.x2-c.x1, 2) + Math.pow(c.y2-c.y1, 2));
+        totalCalculatedLength += Math.sqrt(Math.pow(c.x2 - c.x1, 2) + Math.pow(c.y2 - c.y1, 2));
     });
     currentLaserLength = 0;
     if (totalCalculatedLength === 0) totalCalculatedLength = 1;
-    if(!isDragging) checkWin();
+    if (!isDragging) checkWin();
 }
 
-function getVisualCoords(l){
-    let x1 = gridOffsetX + l.x1 * TILE_SIZE + TILE_SIZE/2;
-    let y1 = gridOffsetY + l.y1 * TILE_SIZE + TILE_SIZE/2 - BLOCK_HEIGHT;
-    let x2 = gridOffsetX + l.x2 * TILE_SIZE + TILE_SIZE/2;
-    let y2 = gridOffsetY + l.y2 * TILE_SIZE + TILE_SIZE/2 - BLOCK_HEIGHT;
-    
-    if(l.edge){
+function getVisualCoords(l) {
+    let x1 = gridOffsetX + l.x1 * TILE_SIZE + TILE_SIZE / 2;
+    let y1 = gridOffsetY + l.y1 * TILE_SIZE + TILE_SIZE / 2 - BLOCK_HEIGHT;
+    let x2 = gridOffsetX + l.x2 * TILE_SIZE + TILE_SIZE / 2;
+    let y2 = gridOffsetY + l.y2 * TILE_SIZE + TILE_SIZE / 2 - BLOCK_HEIGHT;
+
+    if (l.edge) {
         let dist = TILE_SIZE / 2;
-        if(l.dir === DIR.UP) y2 -= dist;
-        else if(l.dir === DIR.RIGHT) x2 += dist;
-        else if(l.dir === DIR.DOWN) y2 += dist;
-        else if(l.dir === DIR.LEFT) x2 -= dist;
+        if (l.dir === DIR.UP) y2 -= dist;
+        else if (l.dir === DIR.RIGHT) x2 += dist;
+        else if (l.dir === DIR.DOWN) y2 += dist;
+        else if (l.dir === DIR.LEFT) x2 -= dist;
     }
-    if(l.hitObj && l.hitObj.type === TYPE.WALL){
+    if (l.hitObj && l.hitObj.type === TYPE.WALL) {
         let dist = TILE_SIZE * 0.38;
-        if(l.dir === DIR.UP) y2 += dist;
-        else if(l.dir === DIR.RIGHT) x2 -= dist;
-        else if(l.dir === DIR.DOWN) y2 -= dist;
-        else if(l.dir === DIR.LEFT) x2 += dist;
+        if (l.dir === DIR.UP) y2 += dist;
+        else if (l.dir === DIR.RIGHT) x2 -= dist;
+        else if (l.dir === DIR.DOWN) y2 -= dist;
+        else if (l.dir === DIR.LEFT) x2 += dist;
     }
     return { x1, y1, x2, y2 };
 }
 
-function reflect(inDir, rot){
-    if(rot === 0){
-        if(inDir === DIR.UP) return DIR.RIGHT;
-        if(inDir === DIR.RIGHT) return DIR.UP;
-        if(inDir === DIR.DOWN) return DIR.LEFT;
-        if(inDir === DIR.LEFT) return DIR.DOWN;
+function reflect(inDir, rot) {
+    if (rot === 0) {
+        if (inDir === DIR.UP) return DIR.RIGHT;
+        if (inDir === DIR.RIGHT) return DIR.UP;
+        if (inDir === DIR.DOWN) return DIR.LEFT;
+        if (inDir === DIR.LEFT) return DIR.DOWN;
     } else {
-        if(inDir === DIR.UP) return DIR.LEFT;
-        if(inDir === DIR.LEFT) return DIR.UP;
-        if(inDir === DIR.DOWN) return DIR.RIGHT;
-        if(inDir === DIR.RIGHT) return DIR.DOWN;
+        if (inDir === DIR.UP) return DIR.LEFT;
+        if (inDir === DIR.LEFT) return DIR.UP;
+        if (inDir === DIR.DOWN) return DIR.RIGHT;
+        if (inDir === DIR.RIGHT) return DIR.DOWN;
     }
     return -1;
 }
 
-function checkWin(){
+function checkWin() {
     const target = objects.filter(o => o.type === TYPE.TARGET);
-    if(target.length > 0 && target.every(t => t.active)) {
-        if(!isLevelComplete){
+    if (target.length > 0 && target.every(t => t.active)) {
+        if (!isLevelComplete) {
             isLevelComplete = true;
-            
-            if(currentLevelIdx + 1 >= maxUnlockedLevel){
+
+            if (currentLevelIdx + 1 >= maxUnlockedLevel) {
                 maxUnlockedLevel = currentLevelIdx + 2;
+                if (maxUnlockedLevel > asciiLevels.length) maxUnlockedLevel = asciiLevels.length;
                 localStorage.setItem('laserMaze_unlockedLevel', maxUnlockedLevel);
             }
             setTimeout(() => {
@@ -366,37 +367,37 @@ function checkWin(){
     }
 }
 
-function spawnSparks(x, y){
-    for(let i = 0; i<2; i++){
+function spawnSparks(x, y) {
+    for (let i = 0; i < 2; i++) {
         particles.push({
             x: x, y: y,
             vx: (Math.random() - 0.5) * 4,
             vy: (Math.random() - 0.5) * 4,
             life: 1.0,
-            color: `hsl(${Math.random()*40 + 340}, 100%, 75%)`
+            color: `hsl(${Math.random() * 40 + 340}, 100%, 75%)`
         });
     }
 }
-function updateAndDrawParticles(){
+function updateAndDrawParticles() {
     ctx.globalCompositeOperation = 'lighter';
-    for(let i = particles.length - 1; i >= 0; i--){
+    for (let i = particles.length - 1; i >= 0; i--) {
         let p = particles[i];
         p.x += p.vx; p.y += p.vy;
         p.life -= 0.05;
-        if(p.life <= 0){ particles.splice(i, 1); }
+        if (p.life <= 0) { particles.splice(i, 1); }
         else {
             ctx.globalAlpha = p.life;
             ctx.fillStyle = p.color;
-            ctx.beginPath(); ctx.arc(p.x, p.y, 2.5, 0, Math.PI*2); ctx.fill();
+            ctx.beginPath(); ctx.arc(p.x, p.y, 2.5, 0, Math.PI * 2); ctx.fill();
         }
     }
     ctx.globalAlpha = 1.0; ctx.globalCompositeOperation = 'source-over';
 }
 
 //render
-function renderLoop(){
+function renderLoop() {
     const speed = TILE_SIZE * 0.8;
-    if(currentLaserLength < totalCalculatedLength){
+    if (currentLaserLength < totalCalculatedLength) {
         currentLaserLength += speed;
     } else {
         currentLaserLength = totalCalculatedLength;
@@ -405,25 +406,25 @@ function renderLoop(){
     animationFrameId = requestAnimationFrame(renderLoop);
 }
 
-function draw(){
+function draw() {
     let grad = ctx.createRadialGradient(
-        canvas.width/2, canvas.height/2, 50,
-        canvas.width/2, canvas.height/2, Math.max(canvas.width, canvas.height)
+        canvas.width / 2, canvas.height / 2, 50,
+        canvas.width / 2, canvas.height / 2, Math.max(canvas.width, canvas.height)
     );
     grad.addColorStop(0, COLORS.bgGradientStart);
     grad.addColorStop(1, COLORS.bgGradientEnd);
     ctx.fillStyle = grad;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    for(let y=0; y<levelMap.length; y++){
-        for(let x=0; x<levelMap[y].length; x++){
-            if(levelMap[y][x] === 1) drawGridTile(x, y);
+    for (let y = 0; y < levelMap.length; y++) {
+        for (let x = 0; x < levelMap[y].length; x++) {
+            if (levelMap[y][x] === 1) drawGridTile(x, y);
         }
     }
-    if(isDragging){
-        const hX = Math.round((dragPos.x - gridOffsetX - TILE_SIZE/2) / TILE_SIZE);
-        const hY = Math.round((dragPos.y - gridOffsetY - TILE_SIZE/2) / TILE_SIZE);
-        if(isValidMove(hX, hY)){
+    if (isDragging) {
+        const hX = Math.round((dragPos.x - gridOffsetX - TILE_SIZE / 2) / TILE_SIZE);
+        const hY = Math.round((dragPos.y - gridOffsetY - TILE_SIZE / 2) / TILE_SIZE);
+        if (isValidMove(hX, hY)) {
             const px = gridOffsetX + hX * TILE_SIZE;
             const py = gridOffsetY + hY * TILE_SIZE;
             ctx.fillStyle = COLORS.gridHighlight;
@@ -434,25 +435,25 @@ function draw(){
     drawAnimatedLasers();
     updateAndDrawParticles();
 
-    const staticObjs = objects.filter(o => o !== dragObj).sort((a,b) => a.y - b.y);
+    const staticObjs = objects.filter(o => o !== dragObj).sort((a, b) => a.y - b.y);
     staticObjs.forEach(obj => {
-        const cx = gridOffsetX + obj.x * TILE_SIZE + TILE_SIZE/2;
-        const cy = gridOffsetY + obj.y * TILE_SIZE + TILE_SIZE/2;
+        const cx = gridOffsetX + obj.x * TILE_SIZE + TILE_SIZE / 2;
+        const cy = gridOffsetY + obj.y * TILE_SIZE + TILE_SIZE / 2;
         drawObject3D(obj, cx, cy);
     });
-    if(selectedObj && !isDragging){
+    if (selectedObj && !isDragging) {
         const px = gridOffsetX + selectedObj.x * TILE_SIZE;
         const py = gridOffsetY + selectedObj.y * TILE_SIZE;
         ctx.strokeStyle = COLORS.selection; ctx.lineWidth = 3; ctx.setLineDash([10, 5]);
         ctx.strokeRect(px + 4, py + 4, TILE_SIZE - 8, TILE_SIZE - 8); ctx.setLineDash([]);
     }
-    if(isDragging && dragObj){
+    if (isDragging && dragObj) {
         ctx.fillStyle = COLORS.dragShadow;
-        ctx.beginPath(); ctx.ellipse(dragPos.x, dragPos.y + TILE_SIZE*0.4, TILE_SIZE/3, TILE_SIZE/5, 0, 0, Math.PI*2); ctx.fill();
+        ctx.beginPath(); ctx.ellipse(dragPos.x, dragPos.y + TILE_SIZE * 0.4, TILE_SIZE / 3, TILE_SIZE / 5, 0, 0, Math.PI * 2); ctx.fill();
         drawObject3D(dragObj, dragPos.x, dragPos.y - 10, true);
     }
 }
-function drawAnimatedLasers(){
+function drawAnimatedLasers() {
     ctx.lineCap = 'round';
     ctx.lineJoin = 'round';
 
@@ -460,30 +461,30 @@ function drawAnimatedLasers(){
     let activePath = [];
     let sparkPoints = [];
 
-    for(let i = 0; i<lasers.length; i++){
+    for (let i = 0; i < lasers.length; i++) {
         const l = lasers[i];
         const coords = getVisualCoords(l);
-        let segmentLen = Math.sqrt(Math.pow(coords.x2-coords.x1, 2) + Math.pow(coords.y2-coords.y1, 2));
+        let segmentLen = Math.sqrt(Math.pow(coords.x2 - coords.x1, 2) + Math.pow(coords.y2 - coords.y1, 2));
 
-        if(remainingDrawLen >= segmentLen){
+        if (remainingDrawLen >= segmentLen) {
             activePath.push(coords);
             remainingDrawLen -= segmentLen;
 
-            if(l.terminal){
-                sparkPoints.push({x: coords.x2, y: coords.y2});
+            if (l.terminal) {
+                sparkPoints.push({ x: coords.x2, y: coords.y2 });
             }
         } else {
             let percent = remainingDrawLen / segmentLen;
             let pX = coords.x1 + (coords.x2 - coords.x1) * percent;
             let pY = coords.y1 + (coords.y2 - coords.y1) * percent;
-            activePath.push({x1: coords.x1, y1: coords.y1 ,x2: pX, y2: pY});
+            activePath.push({ x1: coords.x1, y1: coords.y1, x2: pX, y2: pY });
 
-            sparkPoints.push({x: pX, y: pY});
+            sparkPoints.push({ x: pX, y: pY });
             remainingDrawLen = 0;
-            break; 
+            break;
         }
-        if(i === lasers.length - 1 && remainingDrawLen >= 0){
-            endPoint = {x: coords.x2, y: coords.y2};
+        if (i === lasers.length - 1 && remainingDrawLen >= 0) {
+            endPoint = { x: coords.x2, y: coords.y2 };
         }
     }
     ctx.globalCompositeOperation = 'lighter';
@@ -500,40 +501,40 @@ function drawAnimatedLasers(){
         spawnSparks(pt.x, pt.y);
         ctx.globalCompositeOperation = 'lighter';
         ctx.fillStyle = '#fff'; ctx.shadowColor = COLORS.laserMid; ctx.shadowBlur = 15;
-        ctx.beginPath(); ctx.arc(pt.x, pt.y, TILE_SIZE/10, 0, Math.PI*2); ctx.fill();
+        ctx.beginPath(); ctx.arc(pt.x, pt.y, TILE_SIZE / 10, 0, Math.PI * 2); ctx.fill();
         ctx.globalCompositeOperation = 'source-over'; ctx.shadowBlur = 0;
     });
 }
 
-function drawGridTile(x, y){
+function drawGridTile(x, y) {
     const px = gridOffsetX + x * TILE_SIZE;
     const py = gridOffsetY + y * TILE_SIZE;
     ctx.fillStyle = COLORS.gridFill;
     ctx.strokeStyle = COLORS.gridBorder;
     ctx.lineWidth = 3;
     ctx.beginPath(); ctx.rect(px, py, TILE_SIZE, TILE_SIZE); ctx.fill(); ctx.stroke();
-    ctx.strokeStyle = 'rgba(255,255,255,0.05)'; ctx.lineWidth = 1; ctx.strokeRect(px+5, py+5, TILE_SIZE-10, TILE_SIZE-10);
+    ctx.strokeStyle = 'rgba(255,255,255,0.05)'; ctx.lineWidth = 1; ctx.strokeRect(px + 5, py + 5, TILE_SIZE - 10, TILE_SIZE - 10);
 }
 
-function drawObject3D(obj, cx, cy, lifted = false){
+function drawObject3D(obj, cx, cy, lifted = false) {
     const size = TILE_SIZE * 0.7;
     const half = size / 2;
     const baseY = lifted ? cy : cy + 5;
     const baseX = cx;
 
-    if(!lifted){
+    if (!lifted) {
         ctx.fillStyle = 'rgba(0,0,0,0.3)';
-        ctx.beginPath(); ctx.ellipse(baseX, baseY + half, half, half*0.4, 0, 0, Math.PI*2); ctx.fill();
+        ctx.beginPath(); ctx.ellipse(baseX, baseY + half, half, half * 0.4, 0, 0, Math.PI * 2); ctx.fill();
     }
-    if(obj.type === TYPE.TARGET){
-        ctx.beginPath(); ctx.arc(cx, cy, size/3, 0, Math.PI*2);
+    if (obj.type === TYPE.TARGET) {
+        ctx.beginPath(); ctx.arc(cx, cy, size / 3, 0, Math.PI * 2);
         ctx.fillStyle = obj.active ? COLORS.targetActive : COLORS.target; ctx.fill();
         ctx.strokeStyle = '#fff'; ctx.lineWidth = 3; ctx.stroke();
-        if(obj.active) { ctx.shadowColor = COLORS.target; ctx.shadowBlur = 20; ctx.fillStyle = '#fff'; ctx.fill(); ctx.shadowBlur = 0; }
+        if (obj.active) { ctx.shadowColor = COLORS.target; ctx.shadowBlur = 20; ctx.fillStyle = '#fff'; ctx.fill(); ctx.shadowBlur = 0; }
         return;
     }
     const topY = baseY - BLOCK_HEIGHT;
-    if(obj.type === TYPE.WALL){
+    if (obj.type === TYPE.WALL) {
         ctx.fillStyle = COLORS.wallSide;
         roundRect(ctx, baseX - half, baseY - half, size, size, 8, true);
         ctx.fillStyle = COLORS.wallTop;
@@ -550,32 +551,32 @@ function drawObject3D(obj, cx, cy, lifted = false){
     }
     ctx.fillStyle = COLORS.blockSide; roundRect(ctx, baseX - half, baseY - half, size, size, 8, true);
     ctx.fillStyle = COLORS.blockTop;
-    if(selectedObj === obj && !isDragging) ctx.fillStyle = '#d1f2eb';
-    if(isDragging && dragObj === obj) ctx.fillStyle = '#abebc6';
+    if (selectedObj === obj && !isDragging) ctx.fillStyle = '#d1f2eb';
+    if (isDragging && dragObj === obj) ctx.fillStyle = '#abebc6';
     roundRect(ctx, baseX - half, topY - half, size, size, 8, true);
 
-    if(obj.type === TYPE.SOURCE){
-        ctx.fillStyle = COLORS.source; ctx.beginPath(); ctx.arc(baseX, topY, size/5, 0, Math.PI*2); ctx.fill();
-        ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(baseX, topY, size/12, 0, Math.PI*2); ctx.fill();
+    if (obj.type === TYPE.SOURCE) {
+        ctx.fillStyle = COLORS.source; ctx.beginPath(); ctx.arc(baseX, topY, size / 5, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(baseX, topY, size / 12, 0, Math.PI * 2); ctx.fill();
     }
-    else if(obj.type === TYPE.MIRROR) drawMirrorFace(baseX, topY, size, obj.rot);
-    else if(obj.type === TYPE.SPLITTER) drawSplitterFace(baseX, topY, size, obj.rot);
+    else if (obj.type === TYPE.MIRROR) drawMirrorFace(baseX, topY, size, obj.rot);
+    else if (obj.type === TYPE.SPLITTER) drawSplitterFace(baseX, topY, size, obj.rot);
 }
-function drawMirrorFace(x, y, size, rot){
-    ctx.strokeStyle = COLORS.mirrorFace; ctx.lineWidth = size/10; ctx.lineCap = 'round';
+function drawMirrorFace(x, y, size, rot) {
+    ctx.strokeStyle = COLORS.mirrorFace; ctx.lineWidth = size / 10; ctx.lineCap = 'round';
     ctx.beginPath(); const offset = size * 0.3;
-    if(rot === 0){ ctx.moveTo(x-offset, y + offset); ctx.lineTo(x + offset, y - offset); }
+    if (rot === 0) { ctx.moveTo(x - offset, y + offset); ctx.lineTo(x + offset, y - offset); }
     else { ctx.moveTo(x - offset, y - offset); ctx.lineTo(x + offset, y + offset); }
     ctx.stroke();
-    ctx.fillStyle = '#3498db'; ctx.beginPath(); ctx.arc(x, y, size/15, 0, Math.PI*2); ctx.fill();
+    ctx.fillStyle = '#3498db'; ctx.beginPath(); ctx.arc(x, y, size / 15, 0, Math.PI * 2); ctx.fill();
 }
 
-function drawSplitterFace(x, y, size, rot){
+function drawSplitterFace(x, y, size, rot) {
     ctx.fillStyle = COLORS.splitterFace;
-    ctx.beginPath(); const s = size/4;
+    ctx.beginPath(); const s = size / 4;
     ctx.moveTo(x, y - s); ctx.lineTo(x + s, y); ctx.lineTo(x, y + s); ctx.lineTo(x - s, y); ctx.fill();
     ctx.strokeStyle = '#fff'; ctx.lineWidth = 3; ctx.beginPath(); const offset = s;
-    if(rot === 0) { ctx.moveTo(x - offset, y + offset); ctx.lineTo(x + offset, y - offset); }
+    if (rot === 0) { ctx.moveTo(x - offset, y + offset); ctx.lineTo(x + offset, y - offset); }
     else { ctx.moveTo(x - offset, y - offset); ctx.lineTo(x + offset, y + offset); }
     ctx.stroke();
 }
@@ -587,96 +588,91 @@ function roundRect(ctx, x, y, width, height, radius, fill) {
     ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height); ctx.lineTo(x + radius, y + height);
     ctx.quadraticCurveTo(x, y + height, x, y + height - radius); ctx.lineTo(x, y + radius);
     ctx.quadraticCurveTo(x, y, x + radius, y); ctx.closePath();
-    if(fill) ctx.fill();
+    if (fill) ctx.fill();
 }
 
-function updateConsole(){
+function updateConsole() {
     const randomMsg = consoleMessage[Math.floor(Math.random() * consoleMessage.length)];
     consoleScreen.innerText = randomMsg;
 }
 
 //Input
-function getGridPos(e){
+function getGridPos(e) {
     const rect = canvas.getBoundingClientRect();
     const mx = e.clientX - rect.left - gridOffsetX;
     const my = e.clientY - rect.top - gridOffsetY;
     return { x: Math.floor(mx / TILE_SIZE), y: Math.floor(my / TILE_SIZE), mx: e.clientX - rect.left, my: e.clientY - rect.top };
 }
 canvas.addEventListener('mousedown', (e) => {
-    if(isLevelComplete) return;
+    if (isLevelComplete) return;
     const pos = getGridPos(e);
     const obj = objects.find(o => o.x === pos.x && o.y === pos.y);
-    if(obj && !obj.locked){
+    if (obj && !obj.locked) {
         isDragging = true; dragObj = obj; selectedObj = obj;
-        const objScreenX = gridOffsetX + obj.x * TILE_SIZE + TILE_SIZE/2;
-        const objScreenY = gridOffsetY + obj.y * TILE_SIZE + TILE_SIZE/2;
+        const objScreenX = gridOffsetX + obj.x * TILE_SIZE + TILE_SIZE / 2;
+        const objScreenY = gridOffsetY + obj.y * TILE_SIZE + TILE_SIZE / 2;
         dragOffset.x = objScreenX - pos.mx; dragOffset.y = objScreenY - pos.my;
         dragPos.x = pos.mx + dragOffset.x; dragPos.y = pos.my + dragOffset.y;
         calculateLaser();
     } else if (obj) selectedObj = null;
 });
+
 canvas.addEventListener('mousemove', (e) => {
-    if(isDragging && dragObj){
+    if (isDragging && dragObj) {
         const rect = canvas.getBoundingClientRect();
         dragPos.x = (e.clientX - rect.left) + dragOffset.x;
         dragPos.y = (e.clientY - rect.top) + dragOffset.y;
     }
 });
+
 canvas.addEventListener('mouseup', (e) => {
-    if(isDragging && dragObj){
-        const dropX = Math.round((dragPos.x - gridOffsetX - TILE_SIZE/2) / TILE_SIZE);
-        const dropY = Math.round((dragPos.y - gridOffsetY - TILE_SIZE/2) / TILE_SIZE);
-        if(isValidMove(dropX, dropY)){
-            if(dragObj.x !== dropX || dragObj.y !== dropY){
+    if (isDragging && dragObj) {
+        const dropX = Math.round((dragPos.x - gridOffsetX - TILE_SIZE / 2) / TILE_SIZE);
+        const dropY = Math.round((dragPos.y - gridOffsetY - TILE_SIZE / 2) / TILE_SIZE);
+
+        //check the move is valid or not.
+        if (isValidMove(dropX, dropY)) {
+            if (dragObj.x !== dropX || dragObj.y !== dropY) {
                 dragObj.x = dropX;
                 dragObj.y = dropY;
 
                 placeSound.currentTime = 0;
                 placeSound.play().catch(e => console.log("Audio Play failed:", e));
+
+                updateConsole();
             }
         }
         isDragging = false;
         dragObj = null;
         calculateLaser();
     }
-    if(isValidMove(dropX, dropY)){
-        if(dragObj.x !== dropX || dragObj.y !== dropY){
-            dragObj.x = dropY;
-            dragObj.y = dropY;
-
-            placeSound.currentTime = 0;
-            placeSound.play().catch(e => console.log("Audio play failed:", e))
-
-            updateConsole();
-        }
-    }
 });
 
-function isValidMove(x, y){
-    if(y < 0 || y >= levelMap.length || x < 0 || x >= levelMap[0].length) return false;
-    if(levelMap[y][x] !== 1) return false;
+function isValidMove(x, y) {
+    if (y < 0 || y >= levelMap.length || x < 0 || x >= levelMap[0].length) return false;
+    if (levelMap[y][x] !== 1) return false;
 
     //space is occupied or not
     const occupant = objects.find(o => o.x === x && o.y === y && o !== dragObj);
-    if(occupant) return false;
+    if (occupant) return false;
     return true;
 }
 document.addEventListener('keydown', (e) => {
-    if(!selectedObj || isLevelComplete || isDragging) return;
+    if (!selectedObj || isLevelComplete || isDragging) return;
     let changed = false;
-    if((e.key === 'ArrowRight' || e.key === 'd') && !selectedObj.locked) { selectedObj.rot = selectedObj.rot === 0 ? 1 : 0; changed = true}
-    else if((e.key === 'ArrowLeft' || e.key === 'a') && !selectedObj.locked) { selectedObj.rot = selectedObj.rot === 0 ? 1 : 0; changed = true}
-    if(changed) calculateLaser();
+    if ((e.key === 'ArrowRight' || e.key === 'd') && !selectedObj.locked) { selectedObj.rot = selectedObj.rot === 0 ? 1 : 0; changed = true }
+    else if ((e.key === 'ArrowLeft' || e.key === 'a') && !selectedObj.locked) { selectedObj.rot = selectedObj.rot === 0 ? 1 : 0; changed = true }
+    if (changed) calculateLaser();
 });
 
-function openLevelMenu(){
+function openLevelMenu() {
     levelGrid.innerHTML = '';
     asciiLevels.forEach((_, index) => {
         const btn = document.createElement('button');
         const levelNum = index + 1;
         btn.className = 'level-btn';
 
-        if(levelNum <= maxUnlockedLevel){
+        if (levelNum <= maxUnlockedLevel) {
             btn.innerText = levelNum;
             btn.onclick = () => {
                 initLevel(index);
@@ -702,13 +698,13 @@ const infoBody = document.getElementById('info-body');
 const btnCloseInfo = document.getElementById('btn-close-info');
 const btnFeatures = document.getElementById('btn-features');
 
-function showInfoModal(title, text){
+function showInfoModal(title, text) {
     infoTitle.innerHTML = title;
     infoBody.innerHTML = text;
     infoModal.classList.remove('hidden');
 }
-if(btnCloseInfo){
-    btnCloseInfo.onclick = () =>  {
+if (btnCloseInfo) {
+    btnCloseInfo.onclick = () => {
         infoModal.classList.add('hidden');
     };
 }
@@ -723,7 +719,7 @@ document.getElementById('btn-how-to').addEventListener('click', () => {
     showInfoModal("HOW TO PLAY", text);
 });
 // button logic for features button
-if(btnFeatures){
+if (btnFeatures) {
     btnFeatures.addEventListener('click', () => {
         const text = `
         - 10 Unique, Hand made levels(using ASCII tiles).
@@ -735,4 +731,14 @@ if(btnFeatures){
         showInfoModal("FEATURES", text);
     });
 }
+
+//preloader
+placeSound.load();
+targetSound.load();
+
+document.body.addEventListener('click', function () {
+    placeSound.play().then(() => placeSound.pause()).catch(() => { });
+    targetSound.play().then(() => targetSound.pause()).catch(() => { });
+}, { once: true });
+
 initLevel(0);

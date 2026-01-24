@@ -1,15 +1,15 @@
 /*using GAGALIN font all over website*/
-@font-face{
+@font-face {
     font-family: 'Gagalin';
-    src: url('Gagalin-Regular.otf') format('opentype'), url('https://raw.githubusercontent.com/nemobgs/mrBurger/master/fonts/wpid-gagalin/Gagalin-Regular.otf') format('opentype');
+    src: url('https://raw.githubusercontent.com/nemobgs/mrBurger/master/fonts/wpid-gagalin/Gagalin-Regular.otf') format('opentype');
     font-weight: normal;
     font-style: normal;
 }
 
-:root{
+:root {
     --bg-color: #000000;
-    --primary-red:#f23549;
-    --text-white:#fff;
+    --primary-red: #f23549;
+    --text-white: #fff;
     --glow-blue: #00d2ff;
 }
 
@@ -52,7 +52,7 @@ body {
     z-index: 20;
 }
 
-.zone-level{
+.zone-level {
     position: absolute;
     top: 7.6%;
     left: 15%;
@@ -67,7 +67,7 @@ body {
     color: white;
 }
 
-.zone-restart{
+.zone-restart {
     top: 6.6%;
     right: 4.5%;
     width: 10.6%;
@@ -75,7 +75,7 @@ body {
     border-radius: 30px;
 }
 
-.zone-game{
+.zone-game {
     position: absolute;
     top: 17.7%;
     left: 4.5%;
@@ -83,6 +83,7 @@ body {
     height: 79.6%;
     padding: 1.5%;
 }
+
 /* 
 .slot-btn{
     position: absolute;
@@ -182,13 +183,14 @@ canvas {
     0% {
         opacity: 0.8;
     }
-    100%{
+
+    100% {
         opacity: 1;
         text-shadow: 0 0 15px #00d2ff, 0 0 30px #00d2ff;
     }
 }
 
-.zone-select{
+.zone-select {
     top: 57%;
     left: 53.7%;
     width: 17.9%;
@@ -204,7 +206,7 @@ canvas {
     border-radius: 20px;
 }
 
-.zone-git{
+.zone-git {
     top: 79.3%;
     right: 2.8%;
     width: 14.5%;
@@ -287,16 +289,17 @@ canvas {
     height: 5.5%;
     font-size: 1.3vw;
 } */
-.hidden{
+.hidden {
     display: none !important;
 }
+
 .modal-overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0,0,0,0.9);
+    background-color: rgba(0, 0, 0, 0.9);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -305,7 +308,8 @@ canvas {
 }
 
 .modal-content {
-    background: #5c2a2a; /*dark brown using that #f23549*/
+    background: #5c2a2a;
+    /*dark brown using that #f23549*/
     border: 4px solid #3d1e1e;
     padding: 30px;
     border-radius: 25px;
@@ -313,23 +317,23 @@ canvas {
     max-width: 600px;
     text-align: center;
     color: white;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
 }
 
-.modal-title{
+.modal-title {
     font-size: 3rem;
     margin-bottom: 20px;
     text-transform: uppercase;
 }
 
-.level-grid{
+.level-grid {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
     gap: 15px;
     margin-bottom: 25px;
 }
 
-.level-btn{
+.level-btn {
     background-color: var(--primary-red);
     color: white;
     font-family: 'Gagalin', sans-serif;
@@ -349,13 +353,13 @@ canvas {
     box-shadow: 0 0 0 #c0392b;
 } */
 
-.level-btn.locked{
+.level-btn.locked {
     background-color: #e58e26;
     box-shadow: 0 4px 0 #c0392b;
     cursor: not-allowed;
 }
 
-.lock-icon{
+.lock-icon {
     width: 24px;
     fill: #3d1e1e;
 }
@@ -373,12 +377,12 @@ canvas {
     margin-top: 10px;
 }
 
-#game-message{
+#game-message {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background: rgba(0,0,0,0.95);
+    background: rgba(0, 0, 0, 0.95);
     color: var(--primary-red);
     padding: 20px 40px;
     font-size: 3rem;
@@ -396,14 +400,15 @@ canvas {
     color: #ffd1d1;
 }
 
-@media (max-width: 1024px){
-    .ui-wrapper{
+@media (max-width: 1024px) {
+    .ui-wrapper {
         width: 100%;
         height: auto;
         /* aspect-ratio: auto;
         min-height: 100vh;
         background-size: cover; */
     }
+
     /* .slot-game{
         width: 90%;
         left: 5%;
