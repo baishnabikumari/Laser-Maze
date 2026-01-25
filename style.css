@@ -408,10 +408,10 @@ canvas {
 
 .info-text {
     text-align: left;
-    font-family: sans-serif;
+    font-family: 'Gagalin', sans-serif;
     font-size: 1.2rem;
     margin-bottom: 20px;
-    color: #ffd1d1;
+    color: #000000;
 }
 
 @media (max-width: 1024px) {
@@ -432,4 +432,25 @@ canvas {
     .slot-inventory{
         display: none;
     } */
+}
+
+.modal-content.how-to-theme{
+    background-image: url(howtoplay.png);
+    width: 1300px;
+    height: 650px;
+    padding: 0;
+    background-size: 100% 100%;
+}
+
+.modal-content.how-to-theme .modal-title{
+    display: none;
+}
+
+.modal-content.how-to-theme #btn-close-info{
+    bottom: 12.1%;
+    width: 165.7px;
+    height: 40px;
+    left: 725px;
+    opacity: 0; /*just to see and align the button correctly*/
+    transform: translateX(-50%);
 }

@@ -736,17 +736,20 @@ function showInfoModal(title, text) {
 if (btnCloseInfo) {
     btnCloseInfo.onclick = () => {
         infoModal.classList.add('hidden');
+        infoModal.querySelector('.modal-content').classList.remove('how-to-theme');
     };
 }
 //button logic for how to play button
 document.getElementById('btn-how-to').addEventListener('click', () => {
+
+    infoModal.querySelector('.modal-content').classList.add('how-to-theme');
     const text = `
     1. <strong>DRAG</strong> mirrors and splitters from down grids(inventory) onto the grid.
     2. <strong>CLICK</strong> on mirror or splitter then a green OUTLINE will appear(ROTATE).
     3. Use <strong>ARROW KEYS</strong>(Left/Right) to rotate the selected object.
     4. <strong>GOAL:</strong> Pass the laser with all the yellow targets with the laser beam using mirrors and splitters.
     `;
-    showInfoModal("HOW TO PLAY", text);
+    showInfoModal("",""); //removed the text cuz my new popup UI already has text 
 });
 
 document.getElementById('btn-restart').addEventListener('click', () => {
