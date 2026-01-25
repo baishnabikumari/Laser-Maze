@@ -78,6 +78,105 @@ let moveHistory = [];
 let isRewinding = false;
 let dragStartCoords = { x: 0, y: 0 };
 
+//for hint
+let showHint = false;
+let hintTimeout = null;
+
+const levelSolutions = [
+    [
+        ".......",
+        ".>.....",
+        ".T\\...",
+        "T./....",
+        "T......",
+        "       ",
+    ],
+    [
+        "....T....",
+        "....%....",
+        "........T",
+        "T........",
+        "....^....",
+        "         "
+    ],
+    [
+        "..%.T.T.T",
+        "..T.....T",
+        ".........",
+        ".........",
+        ".^...^...",
+        "         "
+    ],
+    [
+        ".T.....T.",
+        ".........",
+        ".........",
+        ".>.....>/",
+        ".........",
+        "         "
+    ],
+    [
+        "WWWWWWWWW",
+        "W.T...T.W",
+        "W......%W",
+        "W...>...W",
+        "W.......W",
+        "WWWWWWWWW",
+        "         "
+    ],
+    [
+        "T.......T",
+        ".........",
+        "T.......T",
+        ".........",
+        "T.......T",
+        "....%....",
+        "....^....",
+        "         "
+    ],
+    [
+        "WWWW..WWW",
+        "W..TT.W.W",
+        "W..W..W.W",
+        "W%.T....W",
+        "W..W..W.W",
+        "W^..T.>.W",
+        "WWWWWWWWW",
+        "         "
+    ],
+    [
+        ".T.T.T.T\\",
+        ".........",
+        ".........",
+        ".>.......",
+        "%........",
+        ".........",
+        "         "
+    ],
+    [
+        ".W.W.W.W.",
+        ".........",
+        "T.......T",
+        ".........",
+        "T.......T",
+        "........%",
+        ".>..%..<.",
+        "         "
+    ],
+    [
+        ".....T.....",
+        ".W.......W.",
+        ".W.......W.",
+        ".....^.....",
+        ".W.......W.",
+        ".T....%..T.",
+        "......\\....",
+        "           "
+    ]
+];
+
+
+//actual levels ASCII tile maps below--
 const asciiLevels = [
     [
         ".......",
@@ -114,11 +213,11 @@ const asciiLevels = [
     [
         "WWWWWWWWW",
         "W.T...T.W",
-        "W.......W",
+        "W...T...W",
         "W...>...W",
-        "W.......W",
+        "W.T.....W",
         "WWWWWWWWW",
-        " / \\ / \\ "
+        " % \\ / \\ "
     ],
     [
         "T.......T",
@@ -145,8 +244,8 @@ const asciiLevels = [
         ".........",
         ".........",
         ".>.......",
-        ".........",
-        ".........",
+        "..T....T.",
+        "T........",
         " % / \\ / "
     ],
     [
@@ -416,6 +515,37 @@ function renderLoop() {
     animationFrameId = requestAnimationFrame(renderLoop);
 }
 
+function drawHintOverlay(){
+    if(!showHint || !levelSolutions[currentLevelIdx]) return;
+
+    const solObj = parseLevel(levelSolutions[currentLevelIdx]).objs;
+
+    ctx.save();
+    ctx.globalAlpha = 0.6;
+
+    solObj.forEach(obj => {
+        if(obj.type === TYPE.MIRROR || obj.type === TYPE.SPLITTER){
+            const cx = gridOffsetX + obj.x * TILE_SIZE + TILE_SIZE / 2;
+            const cy = gridOffsetY + obj.y * TILE_SIZE + TILE_SIZE / 2;
+
+            ctx.shadowBlur = 15;
+            ctx.shadowColor = "#00d2ff";
+            drawObject3D(obj, cx, cy);
+
+            const px = gridOffsetX + obj.x * TILE_SIZE;
+            const py = gridOffsetY + obj.y * TILE_SIZE;
+
+            ctx.shadowBlur = 0;
+            ctx.strokeStyle = "#00ffff";
+            ctx.lineWidth = 4;
+            ctx.setLineDash([5, 5]);
+            ctx.strokeRect(px + 5, py + 5, TILE_SIZE - 10, TILE_SIZE - 10);
+            ctx.setLineDash([]);
+        }
+    });
+    ctx.restore();
+}
+
 function draw() {
     let grad = ctx.createRadialGradient(
         canvas.width / 2, canvas.height / 2, 50,
@@ -431,6 +561,11 @@ function draw() {
             if (levelMap[y][x] === 1) drawGridTile(x, y);
         }
     }
+    //hint ghost on the grid 
+    // if(showHint){
+    //     drawHintOverlay();
+    // }
+
     if (isDragging) {
         const hX = Math.round((dragPos.x - gridOffsetX - TILE_SIZE / 2) / TILE_SIZE);
         const hY = Math.round((dragPos.y - gridOffsetY - TILE_SIZE / 2) / TILE_SIZE);
@@ -461,6 +596,10 @@ function draw() {
         ctx.fillStyle = COLORS.dragShadow;
         ctx.beginPath(); ctx.ellipse(dragPos.x, dragPos.y + TILE_SIZE * 0.4, TILE_SIZE / 3, TILE_SIZE / 5, 0, 0, Math.PI * 2); ctx.fill();
         drawObject3D(dragObj, dragPos.x, dragPos.y - 10, true);
+    }
+
+    if(showHint){
+        drawHintOverlay();
     }
 }
 function drawAnimatedLasers() {
@@ -782,6 +921,27 @@ document.getElementById('btn-restart').addEventListener('click', () => {
     }, 200); //100ms
 });
 
+document.getElementById('btn-hint').addEventListener('click', () => {
+    if(showHint) return;
+
+    if (levelSolutions[currentLevelIdx]){
+        showHint = true;
+
+        consoleScreen.innerText = "HINT UPLOADED...";
+        consoleScreen.style.color = "#252525ff"
+        draw();
+
+        clearTimeout(hintTimeout);
+        hintTimeout = setTimeout(() => {
+            showHint = false;
+            consoleScreen.innerText = "SYSTEM READY...";
+            draw();
+            consoleScreen.style.color = "#333"
+        }, 1000);
+    } else {
+        consoleScreen.innerText = "NO DATA...";
+    }
+});
 
 // button logic for features button
 if (btnFeatures) {
