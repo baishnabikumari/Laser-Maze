@@ -35,7 +35,7 @@ const COLORS = {
 
     gridBorder: 'rgba(255, 255, 255, 1)',
     gridFill: 'rgba(0, 0, 0, 0.2)',
-    gridHighlight: 'rgba(255,255,255,0.1)',
+    gridHighlight: 'rgba(255, 255, 255, 0.6)',
 
     blockTop: '#ecf0f1',
     blockSide: '#bdc3c7',
@@ -76,7 +76,7 @@ let dragPos = { x: 0, y: 0 };
 //history undo effect
 let moveHistory = [];
 let isRewinding = false;
-let dragStartPos = { x: 0, y: 0 };
+let dragStartCoords = { x: 0, y: 0 };
 
 const asciiLevels = [
     [
@@ -216,6 +216,9 @@ function resizeCanvas() {
 window.addEventListener('resize', resizeCanvas);
 
 function initLevel(idx) {
+
+    moveHistory = [];
+    isRewinding = false;
     if (idx >= asciiLevels.length) idx = 0;
     currentLevelIdx = idx;
     levelIndicator.innerText = (currentLevelIdx + 1).toString().padStart(2, '0');
@@ -611,15 +614,25 @@ function getGridPos(e) {
     return { x: Math.floor(mx / TILE_SIZE), y: Math.floor(my / TILE_SIZE), mx: e.clientX - rect.left, my: e.clientY - rect.top };
 }
 canvas.addEventListener('mousedown', (e) => {
-    if (isLevelComplete) return;
+    if (isLevelComplete || isRewinding) return;
+
     const pos = getGridPos(e);
     const obj = objects.find(o => o.x === pos.x && o.y === pos.y);
+
     if (obj && !obj.locked) {
-        isDragging = true; dragObj = obj; selectedObj = obj;
+        isDragging = true;
+        dragObj = obj;
+        selectedObj = obj;
+        dragStartCoords = { x: obj.x, y: obj.y };
+
         const objScreenX = gridOffsetX + obj.x * TILE_SIZE + TILE_SIZE / 2;
         const objScreenY = gridOffsetY + obj.y * TILE_SIZE + TILE_SIZE / 2;
-        dragOffset.x = objScreenX - pos.mx; dragOffset.y = objScreenY - pos.my;
-        dragPos.x = pos.mx + dragOffset.x; dragPos.y = pos.my + dragOffset.y;
+
+        dragOffset.x = objScreenX - pos.mx;
+        dragOffset.y = objScreenY - pos.my;
+
+        dragPos.x = pos.mx + dragOffset.x;
+        dragPos.y = pos.my + dragOffset.y;
         calculateLaser();
     } else if (obj) selectedObj = null;
 });
@@ -640,11 +653,21 @@ canvas.addEventListener('mouseup', (e) => {
         //check the move is valid or not.
         if (isValidMove(dropX, dropY)) {
             if (dragObj.x !== dropX || dragObj.y !== dropY) {
+
+                moveHistory.push({
+                    obj: dragObj,
+                    prevX: dragStartCoords.x,
+                    prevY: dragStartCoords.y
+                });
+
                 dragObj.x = dropX;
                 dragObj.y = dropY;
 
                 placeSound.currentTime = 0;
                 placeSound.play().catch(e => console.log("Audio Play failed:", e));
+
+                const randomMsg = consoleMessage[Math.floor(Math.random() * consoleMessage.length)];
+                consoleScreen.innerText = randomMsg;
 
                 updateConsole();
             }
@@ -725,6 +748,38 @@ document.getElementById('btn-how-to').addEventListener('click', () => {
     `;
     showInfoModal("HOW TO PLAY", text);
 });
+
+document.getElementById('btn-restart').addEventListener('click', () => {
+    if(isRewinding || moveHistory.length === 0){
+        initLevel(currentLevelIdx);
+        return;
+    }
+    isRewinding = true;
+    consoleScreen.innerText = "<< REWINDING...";
+    consoleScreen.style.color = "#352f2fff"
+
+    const rewindInterval = setInterval(() => {
+        if(moveHistory.length === 0){
+            //rewinding done
+            clearInterval(rewindInterval);
+            isRewinding = false;
+            consoleScreen.innerText = "SYSTEM READY...";
+            consoleScreen.style.color = "#333";
+            return; 
+        }
+        //last move
+        const lastMove = moveHistory.pop();
+        lastMove.obj.x = lastMove.prevX;
+        lastMove.obj.y = lastMove.prevY;
+
+        placeSound.currentTime = 0;
+        placeSound.play().catch(() => {});
+
+        calculateLaser();
+    }, 200); //100ms
+});
+
+
 // button logic for features button
 if (btnFeatures) {
     btnFeatures.addEventListener('click', () => {
