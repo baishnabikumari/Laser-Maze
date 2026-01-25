@@ -1,7 +1,9 @@
-# Laser Maze
+# Laser Maze - with all new UI 
 > **Reflect-split-Connect - controls the beam and adjust the mirrors to make the beam hit the target(yellow dot).**
 
 > **Real time Ray-Casting PHYSICS**
+> **Rewinding Reset mechanish**
+> **New HINT Button**
 
 ##
 
@@ -58,6 +60,8 @@ Splitter(%)
 
 > **2 .mp3 files(sound effects)**
 
+> **png's for new **handdrawn UI** and designed on canva.
+
 ##
 
 # Installation?
@@ -74,4 +78,4 @@ Splitter(%)
 ```
 3. **Now RUN the game** Install **LIVE SERVER EXTENTION** and then Right click on the index.html and select the option i.e **Open With Live Server(1st Option ig)**
 
-**With all my ♥️ for [milkyway](https://milkyway.hackclub.com/) By Baishu**
+**With ♥️ for [milkyway](https://milkyway.hackclub.com/) By Baishu**
