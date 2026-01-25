@@ -6,12 +6,13 @@
 ##
 
 ## ScreenShots-
-<img width="1440" height="774" alt="Screenshot 2026-01-01 at 1 23 05 AM" src="https://github.com/user-attachments/assets/5654ca5a-171e-4e30-ba58-3439ec9f2d75" />
-<img width="1440" height="776" alt="Screenshot 2026-01-01 at 1 26 22 AM" src="https://github.com/user-attachments/assets/289d524b-64a6-4a61-9bc9-99e2f7b9f37d" />
-<img width="1440" height="776" alt="Screenshot 2026-01-01 at 1 26 15 AM" src="https://github.com/user-attachments/assets/3f487e0d-22f2-4117-a7df-03c8eccdd518" />
+<img width="1440" height="722" alt="Screenshot 2026-01-26 at 3 29 45 AM" src="https://github.com/user-attachments/assets/59dcaf1d-02b8-4dbf-ac99-2bd1e940ea17" />
+<img width="1440" height="727" alt="Screenshot 2026-01-26 at 3 29 54 AM" src="https://github.com/user-attachments/assets/a2af8f81-861b-475e-b53e-d28a7351c9c1" />
+<img width="1440" height="727" alt="Screenshot 2026-01-26 at 3 30 03 AM" src="https://github.com/user-attachments/assets/4d44edfd-3c69-455c-b137-2889005ab4f6" />
+<img width="1440" height="777" alt="Screenshot 2026-01-26 at 3 18 03 AM" src="https://github.com/user-attachments/assets/ca5d5f47-91b7-4190-9cc0-7ad7dbd2c29b" />
 
 ## Video of Gameplay!
-https://github.com/user-attachments/assets/40f0f4c2-5cb1-43be-ab14-4e48e1984c2f
+https://github.com/user-attachments/assets/1661183d-e453-405d-b688-89ab39c47912
 
 ## About this GAME(Laser-Maze)
 **Why Laser Maze?** cuz it is a physics based puzzle game built with using the concept of laser and the mirror reflections.
