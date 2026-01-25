@@ -32,23 +32,25 @@ let gridOffsetY = 0;
 const COLORS = {
     bgGradientStart: '#05101a',
     bgGradientEnd: '#000000',
-    gridBorder: 'rgba(0, 210, 255, 0.1)',
-    gridFill: 'rgba(10, 20, 30, 0.8)',
-    gridHighlight: 'rgba(255,255,255,0.2)',
+
+    gridBorder: 'rgba(255, 255, 255, 1)',
+    gridFill: 'rgba(0, 0, 0, 0.2)',
+    gridHighlight: 'rgba(255,255,255,0.1)',
+
     blockTop: '#ecf0f1',
     blockSide: '#bdc3c7',
     wallTop: '#95a5a6',
     wallSide: '#7f8c8d',
     mirrorFace: '#3498db',
     splitterFace: '#9b59b6',
-    laserCore: '#ffffff',
+    laserCore: '#ffffffff',
     laserMid: '#ff3333',
     laserGlow: '#ff0000',
     source: '#e74c3c',
     target: '#f1c40f',
     targetActive: '#ffffff',
     selection: '#2ecc71',
-    dragShadow: 'rgba(0,0,0,0.5)'
+    dragShadow: 'rgba(226, 226, 226, 0.53)'
 };
 
 const TYPE = { EMPTY: 0, WALL: 1, MIRROR: 2, SOURCE: 4, TARGET: 5, SPLITTER: 6 };
@@ -70,6 +72,11 @@ let isDragging = false;
 let dragObj = null;
 let dragOffset = { x: 0, y: 0 };
 let dragPos = { x: 0, y: 0 };
+
+//history undo effect
+let moveHistory = [];
+let isRewinding = false;
+let dragStartPos = { x: 0, y: 0 };
 
 const asciiLevels = [
     [

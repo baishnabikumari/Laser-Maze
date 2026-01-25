@@ -62,9 +62,9 @@ body {
     align-items: center;
     justify-content: center;
     font-size: 2.2vw;
-    text-shadow: 0 0 15px var(--glow-blue);
+    text-shadow: 2px 2pc 0px rgba(255, 255, 255, 0.5);
     pointer-events: none;
-    color: white;
+    color: #333333d4;
 }
 
 .zone-restart {
@@ -77,11 +77,14 @@ body {
 
 .zone-game {
     position: absolute;
-    top: 17.7%;
-    left: 4.5%;
-    width: 46.5%;
-    height: 79.6%;
+
+    top: 17.1%;
+    left: 5.5%;
+    width: 44.5%;
+    height: 79.8%;
     padding: 1.5%;
+
+    z-index: 5;
 }
 
 /* 
@@ -171,22 +174,21 @@ canvas {
     font-family: 'Courier New', Courier, monospace;
     font-weight: bold;
     font-size: 2vw;
-    color: #a6f0ff;
-    text-shadow: 0 0 10px #00d3ff, 0 0 20px #00d2ff;
+    color: #333333;
+    text-shadow: 1px 1px 0px rgba(255, 255, 255, 0.5);
     text-align: center;
     width: 80%;
     text-transform: uppercase;
-    animation: pulseText 3s infinite alternate;
+    animation: pulseText 2s infinite alternate;
 }
 
 @keyframes pulseText {
     0% {
-        opacity: 0.8;
+        opacity: 0.6;
     }
 
     100% {
         opacity: 1;
-        text-shadow: 0 0 15px #00d2ff, 0 0 30px #00d2ff;
     }
 }
 
@@ -317,7 +319,7 @@ canvas {
     border: none;
 
     padding: 90px 100px 70px 100px;
-    
+
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -358,8 +360,8 @@ canvas {
     box-shadow: 0 0 0 #c0392b;
 } */
 
-.level-btn:hover{
-    background: rgba(0,0,0,0.1);
+.level-btn:hover {
+    background: rgba(0, 0, 0, 0.1);
     transform: scale(1.1);
 }
 
@@ -374,7 +376,7 @@ canvas {
     fill: #aaa;
 }
 
-.btn-close{
+.btn-close {
     position: absolute;
     bottom: 24%;
     left: 50%;
