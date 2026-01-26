@@ -971,13 +971,15 @@ const introOverlay = document.getElementById('intro-overlay');
 const introTextElement = document.getElementById('intro-text');
 const btnNextStory = document.getElementById('btn-next-story');
 const btnSkipIntro = document.getElementById('btn-skip-intro');
+const typeSound = new Audio('typewriter.mp3');
+typeSound.loop = true;
 
 const storyLines = [
     "Welcome, Light-Bender.\n\nYou stand before the ruins of the Grid, a lost technology that once was giving power to our entire culture.",
-    "",
-    "",
-    "",
-    ""
+    "Centuries of silence has left these circuits cold. The power source is active, but the paths are broken, tangled by time.",
+    "We have recovered these ARTIFACTS: Mirror to reflect, Splitter to divide, and the prisms of old. They are very heavy, but thet will still work.",
+    "Your mission is simple but not easy: align the optical laser network. Guide the laser beams through darkness to strike the Yellow balls.",
+    "Think...Think & Think carefully. One wrong move, and the light fades fro ever.\n\n The grid awaits your magic touch. Let the sequence begin."
 ];
 
 let currentLineIndex = 0;
@@ -991,11 +993,13 @@ function typeWriter(text){
         charIndex++;
         //will add sound effect
     } else {
+        typeSound.pause();
         clearInterval(typingInterval);
         isTyping = false;
         btnNextStory.style.display = 'block';
     }
 }
+
 function startStory(){
     if (currentLineIndex >= storyLines.length){
         closeIntro();
@@ -1006,11 +1010,22 @@ function startStory(){
     charIndex = 0;
     isTyping = true;
     btnNextStory.style.display = 'none';
+
+    typeSound.currentTime = 0;
+    typeSound.play().catch(() => {
+        document.body.addEventListener('click', function unlockAudio() {
+            if(isTyping) typeSound.play();
+            document.body.removeEventListener('click', unlockAudio);
+        }, { once: true });
+    });
+
     typingInterval = setInterval(() => {
         typeWriter(currentText);
     }, 40);
 }
+
 function closeIntro(){
+    typeSound.pause();
     clearInterval(typingInterval);
     introOverlay.style.transition = "opacity 0.5s";
     introOverlay.style.opacity = "0";
@@ -1021,6 +1036,8 @@ function closeIntro(){
 
 btnNextStory.addEventListener('click', () => {
     if(isTyping){
+
+        typeSound.pause();
         clearInterval(typingInterval);
         introTextElement.innerHTML = storyLines[currentLineIndex];
         isTyping = false;
