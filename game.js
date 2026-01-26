@@ -975,6 +975,7 @@ const typeSound = new Audio('typewriter.mp3');
 typeSound.loop = true;
 
 const storyLines = [
+    "Hi There ! Welcome in Laser Maze, Please use below buttons on intro page only to skip The intro or to head to the next story.. \n\n Thanks...",
     "Welcome, Light-Bender.\n\nYou stand before the ruins of the Grid, a lost technology that once was giving power to our entire culture.",
     "Centuries of silence has left these circuits cold. The power source is active, but the paths are broken, tangled by time.",
     "We have recovered these ARTIFACTS: Mirror to reflect, Splitter to divide, and the prisms of old. They are very heavy, but thet will still work.",
