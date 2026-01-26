@@ -966,4 +966,72 @@ document.body.addEventListener('click', function () {
     targetSound.play().then(() => targetSound.pause()).catch(() => { });
 }, { once: true });
 
+//intro
+const introOverlay = document.getElementById('intro-overlay');
+const introTextElement = document.getElementById('intro-text');
+const btnNextStory = document.getElementById('btn-next-story');
+const btnSkipIntro = document.getElementById('btn-skip-intro');
+
+const storyLines = [
+    "Welcome, Light-Bender.\n\nYou stand before the ruins of the Grid, a lost technology that once was giving power to our entire culture.",
+    "",
+    "",
+    "",
+    ""
+];
+
+let currentLineIndex = 0;
+let charIndex = 0;
+let typingInterval;
+let isTyping = false;
+
+function typeWriter(text){
+    if(charIndex < text.length){
+        introTextElement.innerHTML += text.charAt(charIndex);
+        charIndex++;
+        //will add sound effect
+    } else {
+        clearInterval(typingInterval);
+        isTyping = false;
+        btnNextStory.style.display = 'block';
+    }
+}
+function startStory(){
+    if (currentLineIndex >= storyLines.length){
+        closeIntro();
+        return;
+    }
+    const currentText = storyLines[currentLineIndex];
+    introTextElement.innerHTML = "";
+    charIndex = 0;
+    isTyping = true;
+    btnNextStory.style.display = 'none';
+    typingInterval = setInterval(() => {
+        typeWriter(currentText);
+    }, 40);
+}
+function closeIntro(){
+    clearInterval(typingInterval);
+    introOverlay.style.transition = "opacity 0.5s";
+    introOverlay.style.opacity = "0";
+    setTimeout(() => {
+        introOverlay.classList.add('hidden');
+    }, 500);
+}
+
+btnNextStory.addEventListener('click', () => {
+    if(isTyping){
+        clearInterval(typingInterval);
+        introTextElement.innerHTML = storyLines[currentLineIndex];
+        isTyping = false;
+        btnNextStory.style.display = 'block';
+    } else{
+        currentLineIndex++;
+        startStory();
+    }
+});
+
+btnSkipIntro.addEventListener('click', closeIntro);
+startStory();
+
 initLevel(0);

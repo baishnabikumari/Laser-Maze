@@ -454,3 +454,112 @@ canvas {
     opacity: 0; /*just to see and align the button correctly*/
     transform: translateX(-50%);
 }
+
+/*Intro*/
+#intro-overlay{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.6);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);/*for safari*/
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.intro-container{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    padding-bottom: 1.5%;
+}
+
+.intro-box{
+    width: 1500px;
+    height: 580px;
+    background-image: url('intro.png');
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    position: relative;
+    padding: 310px 350px 20px 160px;
+    display: flex;
+    align-items: center;
+}
+
+#intro-text{
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 1.6rem;
+    font-weight: bold;
+    color: #333;
+    line-height: 1;
+    white-space: pre-wrap;
+    text-shadow: none;
+    margin-bottom: 2px;
+    width: 100%;
+}
+
+#intro-text::after{
+    content: '|';
+    animation: blink 1s infinite;
+}
+
+@keyframes blink {
+    50% { opacity: 0;}
+}
+
+.intro-controls {
+    position: absolute;
+    bottom: 15px;
+    right: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-end;
+    opacity: 1;
+}
+
+#btn-next-story{
+    position: absolute;
+    top: -35px;
+    left: -385px;
+    background: transparent;
+    border: 2px solid #333;
+    border-radius: 20px;
+    font-family: 'Gagalin', sans-serif;
+    color: #ff0202;
+    font-size: 1.5rem;
+    cursor: pointer;
+    opacity: 0; /*not important just to align button perfectly*/
+    width: 70px;
+    transition: 0.2s;
+    display: none;
+}
+
+#btn-skip-intro{
+    position: absolute;
+    bottom: -3px;
+    right: 80px;
+    background: #fff;
+    border: 2px solid #333;
+    border-radius: 20px;
+    padding: 10px;
+    font-family: 'Gagalin', sans-serif;
+    font-size: 1.2rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 100px;
+    opacity: 0;
+    white-space: nowrap;
+}
+
+#btn-skip-intro:active{
+    transform: translate(2px, 2px);
+    box-shadow: none;
+}
