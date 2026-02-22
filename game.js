@@ -267,6 +267,42 @@ const asciiLevels = [
         ".T.......T.",
         "...........",
         " % % / \\ / "
+    ],
+    [
+        "T.T....T...T",
+        "......T.....",
+        "...T.....T..",
+        "......T.....",
+        ".>.........<",
+        "..>.........",
+        "............",
+        "............",
+        " % % % / \\ /"
+    ],
+    [
+        "WWWWWWWWWWWWWWW",
+        "W.T....T......W",
+        "W...WW........W",
+        "W...WW........W",
+        "W........T.T.TW",
+        "W....T....T.T.W",
+        "W.>...........W",
+        "WT........T...W",
+        "WT.....^......W",
+        "WWWWWWWWWWWWWWW",
+        " % % \\ / / \\ /"
+    ],
+    [
+        "......W......",
+        "...W..T..W...",
+        ".W.T.......W.",
+        ".W....T....W.",
+        "...W....<W.T.",
+        "......W.T....",
+        ">.......T....",
+        ".....WWWW....",
+        "..WWWWWWWWW..",
+        " % % / \\ / "
     ]
 ];
 
@@ -978,9 +1014,9 @@ const storyLines = [
     "Hi There ! Welcome in Laser Maze, Please use below buttons on intro page only to skip The intro or to head to the next story.. \n\n Thanks...",
     "Welcome, Light-Bender.\n\nYou stand before the ruins of the Grid, a lost technology that once was giving power to our entire culture.",
     "Centuries of silence has left these circuits cold. The power source is active, but the paths are broken, tangled by time.",
-    "We have recovered these ARTIFACTS: Mirror to reflect, Splitter to divide, and the prisms of old. They are very heavy, but thet will still work.",
+    "We have recovered these ARTIFACTS: Mirror to reflect, Splitter to divide, and the prisms of old. They are very heavy, but they will still work.",
     "Your mission is simple but not easy: align the optical laser network. Guide the laser beams through darkness to strike the Yellow balls.",
-    "Think...Think & Think carefully. One wrong move, and the light fades fro ever.\n\n The grid awaits your magic touch. Let the sequence begin."
+    "Think...Think & Think carefully. One wrong move, and the light fades forever.\n\n The grid awaits your magic touch. Let the sequence begin."
 ];
 
 let currentLineIndex = 0;
