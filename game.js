@@ -61,6 +61,8 @@ let levelMap = [];
 let objects = [];
 let lasers = [];
 let particles = [];
+let isLevelComplete = false;
+let selectedObj = null;
 
 //animate
 let currentLaserLength = 0;
@@ -669,7 +671,7 @@ function drawAnimatedLasers() {
             break;
         }
         if (i === lasers.length - 1 && remainingDrawLen >= 0) {
-            endPoint = { x: coords.x2, y: coords.y2 };
+            let endPoint = { x: coords.x2, y: coords.y2 };
         }
     }
     ctx.globalCompositeOperation = 'lighter';
@@ -979,19 +981,19 @@ document.getElementById('btn-hint').addEventListener('click', () => {
     }
 });
 
-// button logic for features button
-if (btnFeatures) {
-    btnFeatures.addEventListener('click', () => {
-        const text = `
-        - 10 Unique, Hand made levels(using ASCII tiles).
-        - Real like laser Beam and logics.
-        - Mirror & Splitter(2 way reflection).
-        - Local storage for progress saving.
-        - Particle effect and neon visuals.
-        `;
-        showInfoModal("FEATURES", text);
-    });
-}
+// // button logic for features button
+// if (btnFeatures) {
+//     btnFeatures.addEventListener('click', () => {
+//         const text = `
+//         - 10 Unique, Hand made levels(using ASCII tiles).
+//         - Real like laser Beam and logics.
+//         - Mirror & Splitter(2 way reflection).
+//         - Local storage for progress saving.
+//         - Particle effect and neon visuals.
+//         `;
+//         showInfoModal("FEATURES", text);
+//     });
+// }
 
 //preloader
 placeSound.load();

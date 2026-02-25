@@ -318,7 +318,7 @@ canvas {
     background-color: transparent;
     border: none;
 
-    padding: 90px 100px 70px 100px;
+    padding: 90px 100px 0px 100px;
 
     display: flex;
     flex-direction: column;
