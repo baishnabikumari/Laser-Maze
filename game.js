@@ -50,10 +50,22 @@ const COLORS = {
     target: '#f1c40f',
     targetActive: '#ffffff',
     selection: '#2ecc71',
-    dragShadow: 'rgba(226, 226, 226, 0.53)'
+    dragShadow: 'rgba(226, 226, 226, 0.53)',
+    portalIn: '#00f2ff',
+    portalOut: '#ff9d00',
+    portalGlow: 'rgba(0, 242, 255, 0.5)'
 };
 
-const TYPE = { EMPTY: 0, WALL: 1, MIRROR: 2, SOURCE: 4, TARGET: 5, SPLITTER: 6 };
+const TYPE = { 
+    EMPTY: 0, 
+    WALL: 1, 
+    MIRROR: 2, 
+    SOURCE: 4, 
+    TARGET: 5, 
+    SPLITTER: 6,
+    PORTAL_IN: 7, 
+    PORTAL_OUT: 8 
+};
 const DIR = { UP: 0, RIGHT: 1, DOWN: 2, LEFT: 3 };
 
 let currentLevelIdx = 0;
@@ -176,7 +188,6 @@ const levelSolutions = [
         "           "
     ]
 ];
-
 
 //actual levels ASCII tile maps below--
 const asciiLevels = [
@@ -305,6 +316,14 @@ const asciiLevels = [
         ".....WWWW....",
         "..WWWWWWWWW..",
         " % % / \\ / "
+    ],
+    [
+        ".......",
+        ".>..I..",
+        ".T.....",
+        "T......",
+        ".O.....",
+        "/ / \\  "
     ]
 ];
 
@@ -328,6 +347,10 @@ function parseLevel(asciiGrid) {
             else if (char === '/') obj = { type: TYPE.MIRROR, rot: 0, locked: false };
             else if (char === '\\') obj = { type: TYPE.MIRROR, rot: 1, locked: false };
             else if (char === '%') obj = { type: TYPE.SPLITTER, rot: 0, locked: false };
+
+            else if (char === 'I') obj = { type: TYPE.PORTAL_IN, locked: true };
+            else if (char === 'O') obj = { type: TYPE.PORTAL_OUT, locked: true };
+
             if (obj) { obj.x = x; obj.y = y; objs.push(obj); }
         }
         map.push(mapRow);
@@ -429,6 +452,13 @@ function calculateLaser() {
                     let newDir = reflect(beam.dir, hitObject.rot);
                     if (newDir !== -1) beams.push({ x: currX, y: currY, dir: newDir });
                     isTerminal = false;
+                }
+                else if (hitObject.type === TYPE.PORTAL_IN){
+                    const exitPortal = objects.find(o => o.type === TYPE.PORTAL_OUT);
+                    if (exitPortal){
+                        beams.push({ x: exitPortal.x, y: exitPortal.y, dir: beam.dir});
+                        isTerminal = false;
+                    }
                 }
             }
             lasers.push({
@@ -748,7 +778,15 @@ function drawObject3D(obj, cx, cy, lifted = false) {
     }
     else if (obj.type === TYPE.MIRROR) drawMirrorFace(baseX, topY, size, obj.rot);
     else if (obj.type === TYPE.SPLITTER) drawSplitterFace(baseX, topY, size, obj.rot);
+
+    else if(obj.type === TYPE.PORTAL_IN){
+        drawPortalRight(baseX, topY - size/4, size, COLORS.portalIn, true);
+    }
+    else if(obj.type === TYPE.PORTAL_OUT){
+        drawPortalRight(baseX, topY - size/4, size, COLORS.portalOut, false);
+    }
 }
+
 function drawMirrorFace(x, y, size, rot) {
     ctx.strokeStyle = COLORS.mirrorFace; ctx.lineWidth = size / 10; ctx.lineCap = 'round';
     ctx.beginPath(); const offset = size * 0.3;
@@ -1071,6 +1109,44 @@ function closeIntro(){
     setTimeout(() => {
         introOverlay.classList.add('hidden');
     }, 500);
+}
+
+function drawPortalRight(x, y, size, color, isEntry){
+    const pulse = (Math.sin(Date.now() / 200) * 0.1) + 1;
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.scale(1, 0.4);
+
+    //black hole
+    ctx.beginPath();
+    ctx.arc(0, 0, size * 0.4, 0, Math.PI * 2);
+    ctx.fillStyle = '#000';
+    ctx.fill();
+
+    //glowing ring
+    ctx.beginPath();
+    ctx.arc(0, 0, size * 0.4, 0, Math.PI * 2);
+    ctx.strokeStyle = color;
+    ctx.lineWidth = size * 0.15;
+    ctx.shadowColor = color;
+    ctx.shadowBlur = 20 * pulse;
+    ctx.stroke();
+
+    //white core
+    ctx.beginPath();
+    ctx.arc(0, 0, size * 0.4, 0, Math.PI * 2);
+    ctx.shadowBlur = 5;
+    ctx.strokeStyle = '#fff';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    if(Math.random() > 0.8) {
+        ctx.fillStyle = '#fff';
+        const px = (Math.random() - 0.5) * size;
+        const py = (Math.random() - 0.5) * size;
+        ctx.fillRect(px, py, 2, 2);
+    }
+    ctx.restore();
 }
 
 btnNextStory.addEventListener('click', () => {
