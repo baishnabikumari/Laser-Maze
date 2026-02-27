@@ -291,6 +291,7 @@ canvas {
     height: 5.5%;
     font-size: 1.3vw;
 } */
+
 .hidden {
     display: none !important;
 }
@@ -336,15 +337,19 @@ canvas {
     grid-template-columns: repeat(5, 1fr);
     gap: 10px;
     width: 60%;
-    margin-bottom: 200px;
+    margin-bottom: 170px;
 }
 
 .level-btn {
     background-color: #c8c5c5;
     color: #333;
     font-family: 'Gagalin', sans-serif;
-    font-size: 2.5rem;
+
+    width: 60px;
+    height: 60px;
+    font-size: 1.4rem;
     border: 3px solid #333;
+
     border-radius: 50%;
     aspect-ratio: 1;
     cursor: pointer;
